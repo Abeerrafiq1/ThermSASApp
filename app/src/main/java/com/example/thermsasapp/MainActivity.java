@@ -1,5 +1,4 @@
 package com.example.thermsasapp;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.widget.Button;
@@ -9,6 +8,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button viewdata_button;
+    Button viewdata_button3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
