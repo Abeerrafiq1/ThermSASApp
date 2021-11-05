@@ -8,6 +8,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button viewdata_button;
+    Button viewdata_button3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
