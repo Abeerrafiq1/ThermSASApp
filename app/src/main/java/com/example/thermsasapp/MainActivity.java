@@ -1,24 +1,39 @@
 package com.example.thermsasapp;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.StrictMode;
 
 public class MainActivity extends AppCompatActivity {
-
-    Button viewdata_button;
-    Button viewdata_button3;
+    private receiver Receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewdata_button = findViewById(R.id.button); //view data
-        viewdata_button.setOnClickListener(v -> {
-            Toast.makeText(MainActivity.this, "view data", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(MainActivity.this, ViewDataActivity.class));
+        if(android.os.Build.VERSION.SDK_INT > 9){
+            StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+        try {
+            Receiver = new receiver();
+            Receiver.start();
+        } catch (Exception e) {
+            String str = e.toString();
+        }
+
+        Button login_button = (Button) findViewById(R.id.loginbutton);
+        login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, loginActivity.class));
+            }
+
         });
     }
 }
