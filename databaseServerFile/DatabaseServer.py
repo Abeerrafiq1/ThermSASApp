@@ -14,7 +14,12 @@ class DatabaseServer:
         self.__soc_recv.bind(recv_address)
         self.__soc_send =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__app_addrs = (app_ip_addrs, appSendport)     
-        
+
+        dbpath = 'C:/Users/amanp/OneDrive/Desktop/SYSC 4907/loginDB.db'
+        self.__dbconnect = sqlite3.connect(dbpath); 
+        self.__dbconnect.row_factory = sqlite3.Row;
+        self.__cursor = self.__dbconnect.cursor()        
+
         if (self.__DEBUG):
             print("\nDatabaseServer Initialized")
 
@@ -46,7 +51,23 @@ class DatabaseServer:
 
     def send_App_Msg(self, strToString):   
         self.__soc_send.sendto(strToString.encode('utf-8'), self.__app_addrs)  
-        return       
+        return     
+
+    def retrieveUserLoginInfo(self, enteredUsername):
+        try:
+            mysql = """SELECT """ + """password FROM User_Login_Info WHERE username = '""" + str(enteredUsername) +"""'"""
+            myresult = self.__cursor.execute(mysql).fetchall()
+            password = [dict(i) for i in myresult]
+            if (len(password) > 0):
+                DBpassword = password[0].get('password')
+                toSend = '{"opcode" : "2", "password" : "' + str(DBpassword) + '"}'
+            else:
+                toSend = '{"opcode" : "2", "password" : ""}'
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                print ('\nDatabase Error %s:' % e.args[0])
+            toSend = '{"opcode" : "2", "password" : ""}'
+        return toSend  
                           
 def main():
     DEBUG = True
@@ -57,7 +78,7 @@ def main():
             continue
         else:
             if (data.get('opcode') == "1"):
-                msg = '{"opcode" : "2", "password" : "Rafiq"}'
+                msg = dbServer.retrieveUserLoginInfo(data.get('username'))
                 dbServer.send_App_Msg(msg)
     self.__soc_recv.shutdown(1)
     self.__soc_send.shutdown(1)
