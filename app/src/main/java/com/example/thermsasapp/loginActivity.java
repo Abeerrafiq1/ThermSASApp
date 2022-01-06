@@ -50,11 +50,16 @@ public class loginActivity extends AppCompatActivity {
                 try {
                     JSONObject obj = new JSONObject((String) dbpassword.obj);
                     String password = obj.getString("password");
-                    if (password.equals(password_textview.getText().toString())){
-                        Toast.makeText(mContext, "Authenticated!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(loginActivity.this, mainOptionsActivity.class));
+                    if (!password_textview.getText().toString().isEmpty() && ! username_textview.getText().toString().isEmpty() && password.equals(password_textview.getText().toString())){
+                        String notifications = obj.getString("notifications");
+                        MainActivity.notifications.clear();
+                        MainActivity.notifications.add(0, notifications);
+                        Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
+                        intent.putExtra("currentUser", username_textview.getText().toString());
+                        startActivity(intent);
                     } else {
-                        Toast.makeText(mContext, "wrong pass!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

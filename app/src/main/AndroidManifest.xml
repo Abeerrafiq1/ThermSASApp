@@ -18,8 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".popActivity"
+            android:theme = "@style/Theme.ThermSASApp.CustomTheme">
+        </activity>
+
         <activity android:name=".loginActivity"/>
-        <activity android:name=".mainOptionsActivity"/>
+        <activity android:name=".registerActivity"/>
+        <activity android:name=".addSubscribersActivity"/>
+        <activity android:name=".mainOptionsActivity"/>`
+        <activity android:name=".notificationActivity"/>
+
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

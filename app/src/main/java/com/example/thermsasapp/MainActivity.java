@@ -7,8 +7,11 @@ import android.widget.Button;
 import android.os.Bundle;
 import android.os.StrictMode;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private receiver Receiver;
+    static ArrayList<String> notifications = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button login_button = (Button) findViewById(R.id.loginbutton);
+        Button register_button = (Button) findViewById(R.id.registerButton);
+
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,5 +40,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        register_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, registerActivity.class));
+            }
+
+        });
+
+
+
     }
 }

@@ -44,6 +44,23 @@ class receiver extends Thread {
                             e.printStackTrace();
                         }
                         break;
+                    case "4":
+                        try {
+                            Thread.sleep(1000);
+                            registerActivity.exHandler.sendMessage(registerActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "7": case "8":
+                        try {
+                            Thread.sleep(1000);
+                            MainActivity.notifications.add(0, "help");
+                            addSubscribersActivity.exHandler.sendMessage(addSubscribersActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                 }
 
             }
