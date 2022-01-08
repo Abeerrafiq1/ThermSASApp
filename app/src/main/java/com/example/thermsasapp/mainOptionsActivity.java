@@ -7,14 +7,12 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-
 
 public class mainOptionsActivity extends AppCompatActivity {
     Context mContext = this;
-
+    private sender Sender;
+    private String databaseServerAddr = "192.168.137.1";
+    private static final int senderPort = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,7 @@ public class mainOptionsActivity extends AppCompatActivity {
 
         Button addSubscriber = (Button) findViewById(R.id.addSubscriberButton);
         Button notification_button = (Button) findViewById(R.id.view_Notifications);
-
+        Button foodItems_button = (Button) findViewById(R.id.view_FoodItems);
 
         addSubscriber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,5 +42,14 @@ public class mainOptionsActivity extends AppCompatActivity {
             }
 
         });
+        foodItems_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mainOptionsActivity.this, foodListActivity.class));
+
+            }
+
+        });
+
     }
 }

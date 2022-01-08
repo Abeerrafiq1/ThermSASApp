@@ -27,6 +27,7 @@
         <activity android:name=".addSubscribersActivity"/>
         <activity android:name=".mainOptionsActivity"/>`
         <activity android:name=".notificationActivity"/>
+        <activity android:name=".foodListActivity"/>
 
 
     </application>

@@ -24,8 +24,8 @@ class receiver extends Thread {
     }
 
     public void run() {
-       byte[] buffer = new byte[1024];
-       DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 1000);
+       byte[] buffer = new byte[2048];
+       DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 2000);
        String message;
         try {
             while (true) {
@@ -36,7 +36,7 @@ class receiver extends Thread {
                 String opcode = obj.getString("opcode");
 
                 switch (opcode) {
-                    case "2":
+                    case "2": case "10":
                         try {
                             Thread.sleep(1000);
                             loginActivity.exHandler.sendMessage(loginActivity.exHandler.obtainMessage(1, message));
@@ -61,6 +61,7 @@ class receiver extends Thread {
                             e.printStackTrace();
                         }
                         break;
+
                 }
 
             }
