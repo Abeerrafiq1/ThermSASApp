@@ -1,8 +1,6 @@
 package com.example.thermsasapp;
 
 
-import android.util.Log;
-
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import org.json.JSONException;
@@ -24,8 +22,8 @@ class receiver extends Thread {
     }
 
     public void run() {
-       byte[] buffer = new byte[2048];
-       DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 2000);
+       byte[] buffer = new byte[15048];
+       DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 15000);
        String message;
         try {
             while (true) {
@@ -36,7 +34,7 @@ class receiver extends Thread {
                 String opcode = obj.getString("opcode");
 
                 switch (opcode) {
-                    case "2": case "10":
+                    case "2":
                         try {
                             Thread.sleep(1000);
                             loginActivity.exHandler.sendMessage(loginActivity.exHandler.obtainMessage(1, message));
@@ -61,7 +59,38 @@ class receiver extends Thread {
                             e.printStackTrace();
                         }
                         break;
-
+                    case "10":
+                        try {
+                            Thread.sleep(1000);
+                            viewCookingListActivity.exHandler.sendMessage(viewCookingListActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "12": case "14":
+                        try {
+                            Thread.sleep(1000);
+                            addStoveActivity.exHandler.sendMessage(addStoveActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "16":
+                        try {
+                            Thread.sleep(1000);
+                            currentSubscribersActivity.exHandler.sendMessage(currentSubscribersActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "18":
+                        try {
+                            Thread.sleep(1000);
+                            viewStoveDataActivity.exHandler.sendMessage(viewStoveDataActivity.exHandler.obtainMessage(1, message));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                 }
 
             }

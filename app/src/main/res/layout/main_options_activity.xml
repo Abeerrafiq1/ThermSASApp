@@ -6,97 +6,74 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/view_FoodItems"
-        android:layout_width="260dp"
-        android:layout_height="80dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="View Food Items List"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/mainButton2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/mainButton2"
-        android:layout_width="260dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="248dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="View Stove Status "
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/mainButton3"
-        android:layout_width="260dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="352dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="View Stove Data"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/mainButton4"
-        android:layout_width="260dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Add Notes"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainButton3" />
-
-    <Button
-        android:id="@+id/addSubscriberButton"
-        android:layout_width="258dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginBottom="80dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Add Subscriber"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainButton4"
-        app:layout_constraintVertical_bias="0.079" />
-
-    <Button
         android:id="@+id/view_Notifications"
-        android:layout_width="253dp"
-        android:layout_height="92dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="258dp"
+        android:layout_height="62dp"
         android:backgroundTint="#D2C5EA"
         android:text="View Notifications"
         android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_FoodItems"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.162" />
+
+    <Button
+        android:id="@+id/addSubscriberButton"
+        android:layout_width="256dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Add Subscribers"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_stoveData" />
+
+    <Button
+        android:id="@+id/currentSubscribers"
+        android:layout_width="258dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Current Subscribers"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addSubscriberButton" />
+
+    <Button
+        android:id="@+id/addStoveBtn"
+        android:layout_width="251dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Add/View Stove #"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_Notifications" />
+
+    <Button
+        android:id="@+id/view_stoveData"
+        android:layout_width="252dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="View Stove Data"
+        android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.757" />
+        app:layout_constraintTop_toBottomOf="@+id/addStoveBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

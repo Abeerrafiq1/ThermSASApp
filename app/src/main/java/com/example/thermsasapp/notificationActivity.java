@@ -1,7 +1,5 @@
 package com.example.thermsasapp;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +11,7 @@ public class notificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notify_activity);
+        setContentView(R.layout.notification_activity);
 
         RecyclerView recyclerV = (RecyclerView) findViewById(R.id.recylerV);
         notifyAdapter adapterC = new notifyAdapter(MainActivity.notifications);

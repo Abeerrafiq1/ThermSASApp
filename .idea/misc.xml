@@ -4,22 +4,28 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/drawable/pop_bg.xml" value="0.33958333333333335" />
-        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/activity_main.xml" value="0.1921875" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/activity_datatable.xml" value="0.1921875" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/add_notes_activity.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/add_stove_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/add_subcribers.xml" value="0.24909420289855072" />
-        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/add_subcribers_activity.xml" value="0.25" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/add_subcribers_activity.xml" value="0.22" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/current_subscribers_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/food_list_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/item_row.xml" value="0.16822916666666668" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/login_activity.xml" value="0.22" />
-        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/main_options_activity.xml" value="0.25" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/main_options_activity.xml" value="0.2" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/notif_activity.xml" value="0.22239583333333332" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/notifications_activity.xml" value="0.16822916666666668" />
-        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/notify_activity.xml" value="0.28125" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/notify_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/pop_up.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/pop_window.xml" value="0.28125" />
-        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/register_activity.xml" value="0.2658514492753623" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/pop_window_activity.xml" value="0.271875" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/register_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/register_subscriber_activity.xml" value="0.22" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/register_suscriber_activity.xml" value="0.9654605263157895" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/video_list_activity.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/view_stove_data_activity.xml" value="0.2" />
         <entry key="..\:/Users/amanp/AndroidStudioProjects/ThermSASApp/app/src/main/res/layout/viewdata_activity.xml" value="0.1921875" />
       </map>
     </option>

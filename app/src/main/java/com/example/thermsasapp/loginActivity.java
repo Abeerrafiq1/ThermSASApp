@@ -51,52 +51,23 @@ public class loginActivity extends AppCompatActivity {
                 super.handleMessage(dbpassword);
                 try {
                     JSONObject obj = new JSONObject((String) dbpassword.obj);
-                    String opcode = obj.getString("opcode");
-                    if (opcode.equals("2")) {
-                        String password = obj.getString("password");
-                        if (!password_textview.getText().toString().isEmpty() && !username_textview.getText().toString().isEmpty() && password.equals(password_textview.getText().toString())) {
-                            String notifications = obj.getString("notifications");
-                            MainActivity.notifications.clear();
-                            MainActivity.notifications.add(0, notifications);
+                    String password = obj.getString("password");
+                    if (!password_textview.getText().toString().isEmpty() && !username_textview.getText().toString().isEmpty() && password.equals(password_textview.getText().toString())) {
+                        String notifications = obj.getString("notifications");
+                        MainActivity.notifications.clear();
+                        MainActivity.notifications.add(0, notifications);
 
-                            JSONObject userinfo = new JSONObject();
-                            try {
-                                userinfo.put("opcode", "9");
-                                userinfo.put("username", username_textview.getText().toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Sender = new sender();
-                            Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
-
-                            Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
-                            intent.putExtra("currentUser", username_textview.getText().toString());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(mContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else if (opcode.equals("10")) {
-                        String videoList = obj.getString("videoList");
-                        videoList = videoList.replace("[", "");
-                        videoList = videoList.replace("]", "");
-                        videoList = videoList.replaceAll("'","\"");
-                        videoList = videoList.substring(0, videoList.length() - 1);
-                        String [] record = videoList.split(Pattern.quote("}, "));
-                        JSONObject object;
-                        for (int i = 0; i < record.length; i++){
-                            record[i] = record[i] + "}";
-                            object = new JSONObject((String) record[i]);
-                            foodListActivity.foodList.add(0,object.getString("id") + "    ->    " + object.getString("tb_nm"));
-                        }
+                        Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
+                        intent.putExtra("currentUser", username_textview.getText().toString());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-
-
         };
     }
 }
