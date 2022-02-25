@@ -10,14 +10,16 @@
     <android.widget.HorizontalScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/stoveData"
-                android_layout_height="match_parent"
-                android_layout_width="900dp"
-                android:layout_width="900dp"
-                android:layout_height="659dp" />
+        <de.codecrafters.tableview.TableView
+            android:id="@+id/stoveData"
+            android_layout_height="match_parent"
+            android_layout_width="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" />
 
     </android.widget.HorizontalScrollView>
 

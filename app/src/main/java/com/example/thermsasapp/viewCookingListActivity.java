@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.model.TableColumnDpWidthModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class viewCookingListActivity extends AppCompatActivity {
@@ -35,12 +36,16 @@ public class viewCookingListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_cooking_list_activity);
 
-        String[] titles = {"#", "               TABLE NAME"};
+        String[] titles = {"     #", "               TABLE NAME"};
         tb_v = (TableView) findViewById(R.id.analysisTable);
         tb_v.setHeaderBackgroundColor(Color.parseColor("#D2C5EA"));
         tb_v.setHeaderAdapter(new SimpleTableHeaderAdapter(mContext, titles));
         tb_v.setColumnCount(2);
-        tb_v.setColumnWeight(1, 9);
+
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(mContext, 2);
+        columnModel.setColumnWidth(0, 70);
+        columnModel.setColumnWidth(1, 800);
+        tb_v.setColumnModel(columnModel);
 
         EditText tableNumber = (EditText) findViewById(R.id.editTextEnterNumber);
         Button viewDataBtn = (Button) findViewById(R.id.viewData);

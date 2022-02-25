@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.model.TableColumnDpWidthModel;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
@@ -38,11 +39,21 @@ public class viewStoveDataActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_stove_data_activity);
 
-        String[] titles = {"time_elapsed", "classification", "pan_area", "pan_temp", "num_food", "food_area", "food_temp"};
+        String[] titles = {" Time Elapsed", "Classification", "  Pan Area", "  Pan Temp", "Number Food", "       Food Area", "       Food Temp"};
         tb_v = (TableView) findViewById(R.id.stoveData);
         tb_v.setHeaderBackgroundColor(Color.parseColor("#D2C5EA"));
         tb_v.setHeaderAdapter(new SimpleTableHeaderAdapter(mContext, titles));
         tb_v.setColumnCount(7);
+
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(mContext, 7, 150);
+        columnModel.setColumnWidth(0, 150);
+        columnModel.setColumnWidth(1, 150);
+        columnModel.setColumnWidth(2, 150);
+        columnModel.setColumnWidth(3, 150);
+        columnModel.setColumnWidth(4, 150);
+        columnModel.setColumnWidth(5, 400);
+        columnModel.setColumnWidth(6, 400);
+        tb_v.setColumnModel(columnModel);
 
         Intent intent = getIntent();
         String currentUser = intent.getStringExtra("username");
@@ -69,8 +80,8 @@ public class viewStoveDataActivity extends AppCompatActivity{
                             record[i] = record[i] + "}";
                             object[0] = new JSONObject((String) record[i]);
                              item[0] = new String[]{object[0].getString("time_elapsed"), object[0].getString("classification"), object[0].getString("pan_area"),
-                                    object[0].getString("pan_temp"), object[0].getString("num_food"),
-                                      object[0].getString("food_area"), object[0].getString("food_temp")};
+                                     object[0].getString("pan_temp"), object[0].getString("num_food"),
+                                     "["+object[0].getString("food_area")+"]", "["+object[0].getString("food_temp")+"]"};
                             analysisTable.add(item[0]);
                             if (object[0].getString("classification").equals("on too long")){
                                 isOnTooLong = true;

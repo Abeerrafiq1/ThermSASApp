@@ -26,7 +26,7 @@ public final class SSimpleTableDataAdapter extends TableDataAdapter<String[]> {
         textView.setGravity(Gravity.START);
         textView.setSingleLine();
         textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
-        textView.setPadding(20, 15, 20, 15);
+        textView.setPadding(100, 15, 20, 15);
         textView.setEllipsize(TextUtils.TruncateAt.END);
         textView.setTextSize(textSize);
         textView.setTextColor(0x90000000);
