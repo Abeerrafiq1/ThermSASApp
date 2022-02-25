@@ -55,7 +55,7 @@ class DatabaseServer:
                     print("Receiving is Timed Out")
                 return None
 
-    def send_App_Msg(self, strToString):   
+    def sendAppMsg(self, strToString):   
         self.__soc_send.sendto(strToString.encode('utf-8'), self.__app_addrs)  
         return
      
@@ -71,17 +71,109 @@ class DatabaseServer:
         print(stoveID)  
         return stoveID  
 
-    def retrieveVideoList(self, stoveID):
-        mysql = """SELECT """ + """id, tb_nm FROM videos"""
+    def getSubscribers(self, enteredUsername):
+        mysql = """SELECT """ + """physicianContact, firstContact, secondContact, thirdContact FROM User_Login_Info WHERE username = '""" + str(enteredUsername) +"""'"""
         try:
-            myresult = self.__cursorCooking.execute(mysql).fetchall()
-            list = [dict(i) for i in myresult]
+            myresult = self.__cursor.execute(mysql).fetchall()
+            stoveInfo = [dict(i) for i in myresult]
+            physician = stoveInfo[0].get('physicianContact')
+            contact1 = stoveInfo[0].get('firstContact')
+            contact2 = stoveInfo[0].get('secondContact')
+            contact3 = stoveInfo[0].get('thirdContact')
+            toSend = '{"opcode" : "16", "physician" : "' + physician + '", "contact1" : "' + contact1 + '", "contact2" : "' + contact2 + '", "contact3" : "' + contact3 + '"}'
         except (sqlite3.Error, e):
             if (self.__DEBUG):
+                toSend = '{"opcode" : "16", "physician" : "", "contact1" : "", "contact2" : "", "contact3" : ""}'
                 print ('\nDatabase Error %s:' % e.args[0])
-        toSend = '{"opcode" : "10", "videoList" : "' + str(list) +'"}'
+        print(toSend)  
+        return toSend  
+
+
+    def getStoveNumber(self, enteredUsername):
+        stoveNum = self.retrieveStoveNumber(enteredUsername)
+        toSend = '{"opcode" : "14", "stoveRegistered" : "' + stoveNum + '"}'
         print(toSend)
         return toSend  
+
+    def stoveExists(self, stoveID):
+        mysql = "SELECT COUNT(*) FROM User_Login_Info WHERE stoveID = '" + stoveID + "'"
+        try:
+            myresult = self.__cursor.execute(mysql).fetchall()
+            count = [dict(i) for i in myresult]
+            stoveCount = count[0].get('COUNT(*)')
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                stoveCount = 1
+                print ('\nDatabase Error %s:' % e.args[0])
+        return stoveCount 
+
+
+    def addStoveNumber(self, currentUser, stoveID):
+        if (stoveID == ""):
+            toSend = '{"opcode" : "12", "validity" : "empty", "maxStoveID" : ""}'
+            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"
+            try:
+                self.__cursor.execute(mysql)
+                self.__dbconnect.commit();
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    print ('\nDatabase Error %s:' % e.args[0])
+        elif (self.stoveExists(stoveID) != 0):
+            mysql = "SELECT stoveID FROM  User_Login_Info where stoveID <> '' ORDER BY stoveID DESC LIMIT 1"
+            try:
+                myresult = self.__cursor.execute(mysql).fetchall()
+                maxStove = [dict(i) for i in myresult]
+                maxStoveNum = maxStove[0].get('stoveID')
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    maxStoveNum = 1
+                    print ('\nDatabase Error %s:' % e.args[0])
+                    toSend = '{"opcode" : "12", "validity" : "no", "maxStoveID" : ""}'
+            toSend = '{"opcode" : "12", "validity" : "no", "maxStoveID" : "' + maxStoveNum + '"}'
+        else:
+            toSend = '{"opcode" : "12", "validity" : "yes", "maxStoveID" : ""}'
+            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"
+            try:
+                self.__cursor.execute(mysql)
+                self.__dbconnect.commit();
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    print ('\nDatabase Error %s:' % e.args[0])
+        print(toSend) 
+        print(self.stoveExists(stoveID)) 
+        return toSend  
+
+    def retrieveAnalysisTableData(self, stoveID, username, tableName):
+        if (stoveID == ""):
+            toSend = '{"opcode" : "18", "data" : "''"}'
+        else:
+            try:
+                mysql = """SELECT """ + """time_elapsed, pan_temp, pan_area, num_food, food_temp, food_area FROM """ + tableName
+                myresult = self.__cursorCooking.execute(mysql).fetchall()
+                list = [dict(i) for i in myresult]
+                toSend = '{"opcode" : "18", "data" : "' + str(list) +'"}'
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    toSend = '{"opcode" : "10", "data" : "''"}'
+                    print ('\nDatabase Error %s:' % e.args[0])
+        print(toSend)
+        return toSend  
+
+    def retrieveVideoList(self, stoveID):
+        if (stoveID == ""):
+            toSend = '{"opcode" : "10", "videoList" : "''"}'
+        else:
+            try:
+                mysql = """SELECT """ + """id, tb_nm FROM videos"""
+                myresult = self.__cursorCooking.execute(mysql).fetchall()
+                list = [dict(i) for i in myresult]
+                toSend = '{"opcode" : "10", "videoList" : "' + str(list) +'"}'
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    toSend = '{"opcode" : "10", "videoList" : "''"}'
+                    print ('\nDatabase Error %s:' % e.args[0])
+        print(toSend)
+        return toSend 
 
     def retrieveUserLoginInfo(self, enteredUsername):
         try:
@@ -101,13 +193,10 @@ class DatabaseServer:
                 toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}' 
         except (sqlite3.Error, e):
             if (self.__DEBUG):
+                toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}'
                 print ('\nDatabase Error %s:' % e.args[0])
-            toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}' 
         print(toSend)  
         return toSend  
-
-
-
 
     def usernameExists(self, username, defaultValue):
         mysql = "SELECT COUNT(*) FROM User_Login_Info WHERE username = '" + username + "'"
@@ -117,8 +206,9 @@ class DatabaseServer:
             userCount = count[0].get('COUNT(*)')
         except (sqlite3.Error, e):
             if (self.__DEBUG):
-                print ('\nDatabase Error %s:' % e.args[0])
                 userCount = defaultValue
+                print ('\nDatabase Error %s:' % e.args[0])
+
         return userCount 
         
     def register(self, username, password, isPhysician):
@@ -135,8 +225,8 @@ class DatabaseServer:
                 toSend = '{"opcode" : "4", "valid" : "yes"}'
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
-                    print ('\nDatabase Error %s:' % e.args[0])
                     toSend = '{"opcode" : "4", "valid" : "no"}'
+                    print ('\nDatabase Error %s:' % e.args[0])
         return toSend    
         
     def addRegularSubscribers(self, currentUser, contactOne, contactTwo, contactThree):
@@ -233,20 +323,32 @@ def main():
         else:
             if (data.get('opcode') == "1"):
                 msg = dbServer.retrieveUserLoginInfo(data.get('username'))
-                dbServer.send_App_Msg(msg)
+                dbServer. sendAppMsg(msg)
             if (data.get('opcode') == "3"):
                 msg = dbServer.register(data.get('username'), data.get('password'), data.get('physician'))
-                dbServer.send_App_Msg(msg)
+                dbServer. sendAppMsg(msg)
             if (data.get('opcode') == "5"):
                 msg = dbServer.addRegularSubscribers(data.get('currentUser'), data.get('contactOne'), data.get('contactTwo'), data.get('contactThree'))
-                dbServer.send_App_Msg(msg)
+                dbServer. sendAppMsg(msg)
             if (data.get('opcode') == "6"):
                 msg = dbServer.addPhysicianSubscriber(data.get('currentUser'), data.get('physician'))
-                dbServer.send_App_Msg(msg)
+                dbServer. sendAppMsg(msg)
             if (data.get('opcode') == "9"):
                 stoveID = dbServer.retrieveStoveNumber(data.get('username'))
                 msg = dbServer.retrieveVideoList(stoveID)
-                dbServer.send_App_Msg(msg)
+                dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "11"):
+                msg = dbServer.addStoveNumber(data.get('currentUser'), data.get('stoveID'))
+                dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "13"):
+                msg = dbServer.getStoveNumber(data.get('currentUser'))
+                dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "15"):
+                msg = dbServer.getSubscribers(data.get('currentUser'))
+                dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "17"):
+                msg = dbServer.retrieveAnalysisTableData("2", data.get('username'), data.get('tableName'))
+                dbServer. sendAppMsg(msg)
     self.__soc_recv.shutdown(1)
     self.__soc_send.shutdown(1)
     self.__cursor.close()
