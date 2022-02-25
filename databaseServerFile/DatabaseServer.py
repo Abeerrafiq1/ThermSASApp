@@ -17,13 +17,13 @@ class DatabaseServer:
 
         dbpath = 'C:/Users/amanp/Documents/SYSC 4907/loginDB.db'
         self.__dbconnect = sqlite3.connect(dbpath); 
-        self.__dbconnect.row_factory = sqlite3.Row;
+        self.__dbconnect.row_factory = sqlite3.Row
         self.__cursor = self.__dbconnect.cursor()    
 
 
-        dbpath_cooking = 'C:/Users/amanp/Documents/SYSC 4907/ThermalCookingDB.db'
+        dbpath_cooking = 'C:/Users/amanp/Documents/SYSC 4907/thermal_cooking.db'
         self.__dbconnectCooking = sqlite3.connect(dbpath_cooking); 
-        self.__dbconnectCooking.row_factory = sqlite3.Row;
+        self.__dbconnectCooking.row_factory = sqlite3.Row
         self.__cursorCooking = self.__dbconnectCooking.cursor()        
 
         if (self.__DEBUG):
@@ -114,7 +114,7 @@ class DatabaseServer:
             mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"
             try:
                 self.__cursor.execute(mysql)
-                self.__dbconnect.commit();
+                self.__dbconnect.commit()
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
@@ -135,7 +135,7 @@ class DatabaseServer:
             mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"
             try:
                 self.__cursor.execute(mysql)
-                self.__dbconnect.commit();
+                self.__dbconnect.commit()
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
@@ -148,7 +148,7 @@ class DatabaseServer:
             toSend = '{"opcode" : "18", "data" : "''"}'
         else:
             try:
-                mysql = """SELECT """ + """time_elapsed, pan_temp, pan_area, num_food, food_temp, food_area FROM """ + tableName
+                mysql = """SELECT """ + """time_elapsed, pan_temp, pan_area, num_food, food_temp, food_area, classification FROM """ + tableName
                 myresult = self.__cursorCooking.execute(mysql).fetchall()
                 list = [dict(i) for i in myresult]
                 toSend = '{"opcode" : "18", "data" : "' + str(list) +'"}'
@@ -164,7 +164,7 @@ class DatabaseServer:
             toSend = '{"opcode" : "10", "videoList" : "''"}'
         else:
             try:
-                mysql = """SELECT """ + """id, tb_nm FROM videos"""
+                mysql = """SELECT """ + """id, analysis_table_name FROM videos WHERE stoveId = """ + str(stoveID) 
                 myresult = self.__cursorCooking.execute(mysql).fetchall()
                 list = [dict(i) for i in myresult]
                 toSend = '{"opcode" : "10", "videoList" : "' + str(list) +'"}'
@@ -216,12 +216,12 @@ class DatabaseServer:
             toSend = '{"opcode" : "4", "valid" : "no"}'
         else:
             if (isPhysician == True):
-                mysql = "INSERT INTO User_Login_Info VALUES ('" + username + "', '" + password + "', '', '', '', '', '', '', 'Yes')"                    
+                mysql = "INSERT INTO User_Login_Info VALUES ('" + username + "', '" + password + "', '', '', '', '', '', '-----------------------------------------', 'Yes')"                    
             else:
-                mysql = "INSERT INTO User_Login_Info VALUES ('" + username + "', '" + password + "', '', '', '', '', '', '', 'No')"    
+                mysql = "INSERT INTO User_Login_Info VALUES ('" + username + "', '" + password + "', '', '', '', '', '', '-----------------------------------------', 'No')"    
             try:
                 self.__cursor.execute(mysql)
-                self.__dbconnect.commit();
+                self.__dbconnect.commit()
                 toSend = '{"opcode" : "4", "valid" : "yes"}'
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
@@ -267,7 +267,7 @@ class DatabaseServer:
             mysql = "UPDATE User_Login_Info SET firstContact = '" + contactOne + "', secondContact = '" + contactTwo + "', thirdContact = '" + contactThree + "' WHERE username = '" + currentUser + "'"   
             try:
                 self.__cursor.execute(mysql)
-                self.__dbconnect.commit();
+                self.__dbconnect.commit()
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
@@ -307,12 +307,92 @@ class DatabaseServer:
             mysql = "UPDATE User_Login_Info SET physicianContact = '" + physician + "' WHERE username = '" + currentUser + "'"   
             try:
                 self.__cursor.execute(mysql)
-                self.__dbconnect.commit();
+                self.__dbconnect.commit()
             except (sqlite3.Error, e):
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
         return toSend    
-                          
+
+    def setNotifications(self, username, Notifications):
+        mysql = "UPDATE User_Login_Info SET notifications = '" + Notifications + "' WHERE username = '" + username + "'"
+        try:
+            self.__cursor.execute(mysql)
+            self.__dbconnect.commit()
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                print ('\nDatabase Error %s:' % e.args[0])
+    
+    def getAndSetNotification(self, username, ContactNotifications):
+        mysql = """SELECT """ + """notifications FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+        try:
+            myresult = self.__cursor.execute(mysql).fetchall()
+            stoveInfo = [dict(i) for i in myresult]
+            notif = stoveInfo[0].get('notifications')
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                print ('\nDatabase Error %s:' % e.args[0])
+        newNotifications = notif + ContactNotifications
+        self.setNotifications(username, newNotifications)
+   
+    def updateContactNotifications(self, username, UserNotifications, ContactNotifications):
+        self.getAndSetNotification(username, UserNotifications)
+        if (ContactNotifications != ""):
+            mysql = """SELECT """ + """firstContact, secondContact, thirdContact FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+            try:
+                myresult = self.__cursor.execute(mysql).fetchall()
+                stoveInfo = [dict(i) for i in myresult]
+                contact1 = stoveInfo[0].get('firstContact')
+                contact2 = stoveInfo[0].get('secondContact')
+                contact3 = stoveInfo[0].get('thirdContact')
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    print ('\nDatabase Error %s:' % e.args[0])
+            if (contact1 != ""):
+                self.getAndSetNotification(contact1, ContactNotifications)
+            if (contact2 != ""):
+                self.getAndSetNotification(contact2, ContactNotifications)
+            if (contact3 != ""):
+                self.getAndSetNotification(contact3, ContactNotifications)
+
+   
+    def updatePhysicianNotifications(self, username, UserNotifications, PhysicianNotifications):
+        self.getAndSetNotification(username, UserNotifications)
+        if (PhysicianNotifications != ""):
+            mysql = """SELECT """ + """physicianContact FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+            try:
+                myresult = self.__cursor.execute(mysql).fetchall()
+                stoveInfo = [dict(i) for i in myresult]
+                physicianContact = stoveInfo[0].get('physicianContact')
+            except (sqlite3.Error, e):
+                if (self.__DEBUG):
+                    print ('\nDatabase Error %s:' % e.args[0])
+            if (physicianContact != ""):
+                self.getAndSetNotification(physicianContact, PhysicianNotifications)
+
+
+    def clearNotifications(self, username):
+        mysql = "UPDATE User_Login_Info SET notifications = '-----------------------------------------' WHERE username = '" + username + "'"
+        try:
+            self.__cursor.execute(mysql)
+            self.__dbconnect.commit()
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                print ('\nDatabase Error %s:' % e.args[0])
+
+    def getNotifications(self, username):
+        mysql = """SELECT """ + """notifications FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+        try:
+            myresult = self.__cursor.execute(mysql).fetchall()
+            stoveInfo = [dict(i) for i in myresult]
+            notif = stoveInfo[0].get('notifications')
+            toSend = '{"opcode" : "22", "notifications" : "' + notif + '"}'
+        except (sqlite3.Error, e):
+            if (self.__DEBUG):
+                toSend = '{"opcode" : "22", "notifications" : ""}'
+                print ('\nDatabase Error %s:' % e.args[0])
+        print(toSend)
+        return toSend
+
 def main():
     DEBUG = True
     dbServer = DatabaseServer(1000, 1100,'192.168.137.77', DEBUG)
@@ -349,6 +429,16 @@ def main():
             if (data.get('opcode') == "17"):
                 msg = dbServer.retrieveAnalysisTableData("2", data.get('username'), data.get('tableName'))
                 dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "19"):
+                dbServer.updateContactNotifications(data.get('username'), data.get('UserNotifications'), data.get('ContactNotifications'))
+            if (data.get('opcode') == "20"):
+                dbServer.clearNotifications(data.get('username'))
+            if (data.get('opcode') == "21"):
+                msg = dbServer.getNotifications(data.get('username'))
+                dbServer. sendAppMsg(msg)
+            if (data.get('opcode') == "23"):
+                dbServer.updatePhysicianNotifications(data.get('username'), data.get('UserNotifications'), data.get('PhysicianNotifications'))
+
     self.__soc_recv.shutdown(1)
     self.__soc_send.shutdown(1)
     self.__cursor.close()
