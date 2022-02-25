@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 public class addStoveActivity extends AppCompatActivity {
     Context mContext = this;
     private sender Sender;
@@ -61,15 +65,20 @@ public class addStoveActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject((String) msg.obj);
                     String opcode = obj.getString("opcode");
                     TextView updateText = (TextView) findViewById(R.id.updateText);
-                    EditText stoveID_editText = (EditText) findViewById(R.id.enterStoveID);
+                    Boolean update = false;
+                    String notification =  "";
                     if (opcode.equals("12")) {
                         String validity = obj.getString("validity");
                         String maxStoveID = obj.getString("maxStoveID");
                         if (validity.equals("yes")) {
                             Toast.makeText(mContext, "Stove registered successfully!", Toast.LENGTH_SHORT).show();
+                            update = true;
+                            notification = "Stove #" + stoveID_editText.getText().toString() + " has been registered successfully!";
                         }
                         else if (validity.equals("empty")){
                             Toast.makeText(mContext, "Stove Entry Cleared", Toast.LENGTH_SHORT).show();
+                            update = true;
+                            notification = "Your stove has been unregistered";
                         }
                         else
                         {
@@ -93,6 +102,29 @@ public class addStoveActivity extends AppCompatActivity {
                         } else {
                             updateText.setText(stoveRegistered);
                         }
+                    }
+
+                    if (update){
+                        ArrayList<String> copyNotifications = new ArrayList<>();
+                        copyNotifications.add(MainActivity.notifications.get(0));
+                        MainActivity.notifications.clear();
+
+                        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                        String formattedTimeStamp = sdf3.format(timestamp);
+                        String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\n" + notification + "\n\n-----------------------------------------";
+                        MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                        JSONObject userinfo = new JSONObject();
+                        try {
+                            userinfo.put("opcode", "19");
+                            userinfo.put("username", currentUser);
+                            userinfo.put("UserNotifications", usersNotification);
+                            userinfo.put("ContactNotifications", "");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Sender = new sender();
+                        Sender.run(databaseServerAddr, userinfo.toString(),  senderPort);
                     }
 
                 } catch (JSONException e) {

@@ -14,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 public class addSubscribersActivity extends AppCompatActivity {
     Context mContext = this;
     private sender Sender;
@@ -85,7 +89,8 @@ public class addSubscribersActivity extends AppCompatActivity {
                 try {
                     JSONObject obj = new JSONObject((String) msg.obj);
                     String opcode = obj.getString("opcode");
-
+                    Boolean sendContactNotif = false;
+                    Boolean sendPhysicianNotif = false;
                     if (opcode.equals("7")) {
                         String contactOne = obj.getString("contactOne");
                         String contactTwo = obj.getString("contactTwo");
@@ -105,8 +110,9 @@ public class addSubscribersActivity extends AppCompatActivity {
                         }
                         else if (contactOne.equals("4") && contactTwo.equals("4") && contactThree.equals("4")){
                             Toast.makeText(mContext, "Subscribers added successfully.", Toast.LENGTH_SHORT).show();
+                            sendContactNotif = true;
                         }
-                        startActivity(new Intent(getApplicationContext(), popActivity.class));
+
                     } else if (opcode.equals("8")) {
                         String physician = obj.getString("physician");
                         if (physician.equals("1")) {
@@ -123,8 +129,47 @@ public class addSubscribersActivity extends AppCompatActivity {
                         }
                         else if (physician.equals("4")){
                             Toast.makeText(mContext, "Physician added successfully.", Toast.LENGTH_SHORT).show();
+                            sendPhysicianNotif = true;
                         }
 
+                    }
+
+                    if (sendContactNotif || sendPhysicianNotif) {
+                        ArrayList<String> copyNotifications = new ArrayList<>();
+                        copyNotifications.add(MainActivity.notifications.get(0));
+                        MainActivity.notifications.clear();
+
+                        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                        String formattedTimeStamp = sdf3.format(timestamp);
+                        String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\nSubscribers have been updated and notified\n\n-----------------------------------------";
+                        JSONObject userinfo = new JSONObject();
+                        if (sendContactNotif) {
+                            String contactNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has added you as a subscriber!\n\n-----------------------------------------";
+                            MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                            try {
+                                userinfo.put("opcode", "19");
+                                userinfo.put("username", currentUser);
+                                userinfo.put("UserNotifications", usersNotification);
+                                userinfo.put("ContactNotifications", contactNotification);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (sendPhysicianNotif) {
+                            String physicianNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has added you as a physician!\n\n-----------------------------------------";
+                            MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                            try {
+                                userinfo.put("opcode", "23");
+                                userinfo.put("username", currentUser);
+                                userinfo.put("UserNotifications", usersNotification);
+                                userinfo.put("PhysicianNotifications", physicianNotification);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Sender = new sender();
+                        Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

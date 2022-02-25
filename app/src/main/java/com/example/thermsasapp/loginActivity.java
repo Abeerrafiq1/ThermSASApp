@@ -50,6 +50,7 @@ public class loginActivity extends AppCompatActivity {
             public void handleMessage(Message dbpassword) {
                 super.handleMessage(dbpassword);
                 try {
+                    Toast.makeText(mContext, "enter", Toast.LENGTH_SHORT).show();
                     JSONObject obj = new JSONObject((String) dbpassword.obj);
                     String password = obj.getString("password");
                     if (!password_textview.getText().toString().isEmpty() && !username_textview.getText().toString().isEmpty() && password.equals(password_textview.getText().toString())) {

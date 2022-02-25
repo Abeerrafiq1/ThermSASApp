@@ -8,11 +8,12 @@ import android.view.Gravity;
 import android.content.Context;
 import android.text.TextUtils;
 import de.codecrafters.tableview.TableDataAdapter;
+import de.codecrafters.tableview.model.TableColumnModel;
+import de.codecrafters.tableview.model.TableColumnWeightModel;
 
 public final class SSimpleTableDataAdapter extends TableDataAdapter<String[]> {
 
     private int textSize = 18;
-
     public SSimpleTableDataAdapter(final Context context, final List<String[]> data) {
         super(context, data);
     }
@@ -35,5 +36,6 @@ public final class SSimpleTableDataAdapter extends TableDataAdapter<String[]> {
     public void setTextSize(int textSize) {
         this.textSize = textSize;
     }
+
 
 }

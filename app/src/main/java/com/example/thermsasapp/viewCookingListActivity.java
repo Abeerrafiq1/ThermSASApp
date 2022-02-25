@@ -46,8 +46,7 @@ public class viewCookingListActivity extends AppCompatActivity {
         Button viewDataBtn = (Button) findViewById(R.id.viewData);
 
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("username");
-
+        String currentUser = intent.getStringExtra("currentUser");
 
 
         exHandler = new Handler() {
@@ -61,7 +60,11 @@ public class viewCookingListActivity extends AppCompatActivity {
                     String[] record = {""};
                     final JSONObject[] object = new JSONObject[1];
                     final String[][] item = new String[1][1];
-                    if (!videoList.equals("")){
+                    if (videoList.equals("[]")) {
+                        Toast.makeText(mContext, "Sorry no videos recorded on registered stove", Toast.LENGTH_SHORT).show();
+                    } else if (videoList.equals("")) {
+                        Toast.makeText(mContext, "Sorry no stove registered", Toast.LENGTH_SHORT).show();
+                    } else {
                         videoList = videoList.replace("[", "");
                         videoList = videoList.replace("]", "");
                         videoList = videoList.replaceAll("'", "\"");
@@ -70,7 +73,7 @@ public class viewCookingListActivity extends AppCompatActivity {
                         for (int i = 0; i < record.length; i++) {
                             record[i] = record[i] + "}";
                             object[0] = new JSONObject((String) record[i]);
-                            item[0] = new String[]{object[0].getString("id") + " :", object[0].getString("tb_nm")};
+                            item[0] = new String[]{object[0].getString("id") + " :", object[0].getString("analysis_table_name")};
                             foodList.add(item[0]);
                         }
                     }
@@ -84,42 +87,44 @@ public class viewCookingListActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             String tb_number = tableNumber.getText().toString();
-                            if (finalVideoList.equals("")){
+                            if (finalVideoList.equals("") ){
                                 Toast.makeText(mContext, "Sorry no stove registered", Toast.LENGTH_SHORT).show();
+                            } else if (finalVideoList.equals("[]")) {
+                                Toast.makeText(mContext, "Sorry no videos recorded on registered stove", Toast.LENGTH_SHORT).show();
                             } else {
-                                String tableNmToLookup = "";
-                                try {
-                                    for (int i = 0; i < finalRecord.length; i++) {
-                                        finalRecord[i] = finalRecord[i] + "}";
-                                        object[0] = new JSONObject((String) finalRecord[i]);
-                                        item[0] = new String[]{object[0].getString("id") + " :",object[0].getString( "tb_nm")};
-                                        if (tb_number.equals(object[0].getString("id"))){
-                                            tableNmToLookup = object[0].getString( "tb_nm");
-                                        }
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                if (!tableNmToLookup.equals("")) {
-                                    JSONObject userinfo = new JSONObject();
+                                    String tableNmToLookup = "";
                                     try {
-                                        userinfo.put("opcode", "17");
-                                        userinfo.put("username", currentUser);
-                                        userinfo.put("tableName", tableNmToLookup);
+                                        for (int i = 0; i < finalRecord.length; i++) {
+                                            finalRecord[i] = finalRecord[i] + "}";
+                                            object[0] = new JSONObject((String) finalRecord[i]);
+                                            item[0] = new String[]{object[0].getString("id") + " :",object[0].getString( "analysis_table_name")};
+                                            if (tb_number.equals(object[0].getString("id"))){
+                                                tableNmToLookup = object[0].getString( "analysis_table_name");
+                                            }
+                                        }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    Sender = new sender();
-                                    Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
+                                    if (!tableNmToLookup.equals("")) {
+                                        JSONObject userinfo = new JSONObject();
+                                        try {
+                                            userinfo.put("opcode", "17");
+                                            userinfo.put("username", currentUser);
+                                            userinfo.put("tableName", tableNmToLookup);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        Sender = new sender();
+                                        Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
 
-                                    startActivity(new Intent(viewCookingListActivity.this, viewStoveDataActivity.class));
-                                } else {
-                                    Toast.makeText(mContext, "Sorry table ID entered is invalid", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(viewCookingListActivity.this, viewStoveDataActivity.class);
+                                        intent.putExtra("username", currentUser);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(mContext, "Sorry table ID entered is invalid", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
-
-                        }
-
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();

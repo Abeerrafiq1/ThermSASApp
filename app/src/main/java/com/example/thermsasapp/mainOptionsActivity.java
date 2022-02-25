@@ -29,13 +29,14 @@ public class mainOptionsActivity extends AppCompatActivity {
         Button notification_button = (Button) findViewById(R.id.view_Notifications);
         Button stoveData_button = (Button) findViewById(R.id.view_stoveData);
         Button addStove_button = (Button) findViewById(R.id.addStoveBtn);
-        //Button addNotes_button = (Button) findViewById(R.id.addNotesBtn);
         Button currentSubscribers = (Button) findViewById(R.id.currentSubscribers);
 
         notification_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mainOptionsActivity.this, notificationActivity.class));
+                Intent intent = new Intent(mainOptionsActivity.this, notificationActivity.class);
+                intent.putExtra("currentUser", currentUser);
+                startActivity(intent);
             }
 
         });
@@ -57,14 +58,6 @@ public class mainOptionsActivity extends AppCompatActivity {
             }
 
         });
-
-//        addNotes_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(mainOptionsActivity.this, addNotesActivity.class));
-//            }
-//
-//        });
 
         addStove_button.setOnClickListener(new View.OnClickListener() {
             @Override
