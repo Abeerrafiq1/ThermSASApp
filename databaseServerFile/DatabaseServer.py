@@ -8,6 +8,7 @@ from datetime import datetime, date
 class DatabaseServer:
     def __init__(self, portReceive, appSendport, app_ip_addrs, debug):
         self.__port = int(portReceive)
+        nothing = False
         self.__DEBUG = debug
         self.__soc_recv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recv_address = ('', self.__port)
@@ -20,6 +21,10 @@ class DatabaseServer:
         self.__dbconnect.row_factory = sqlite3.Row
         self.__cursor = self.__dbconnect.cursor()    
 
+        self.__ackstr = '{"opcode" : "0"}'
+        self.__ack_timeout = 1
+        self.__receive_timeout = 10
+        self.__ack_endTime = 3
 
         dbpath_cooking = 'C:/Users/amanp/Documents/SYSC 4907/thermal_cooking.db'
         self.__dbconnectCooking = sqlite3.connect(dbpath_cooking); 
@@ -65,10 +70,9 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             stoveInfo = [dict(i) for i in myresult]
             stoveID = stoveInfo[0].get('stoveID')
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
-        print(stoveID)  
         return stoveID  
 
     def getSubscribers(self, enteredUsername):
@@ -81,18 +85,16 @@ class DatabaseServer:
             contact2 = stoveInfo[0].get('secondContact')
             contact3 = stoveInfo[0].get('thirdContact')
             toSend = '{"opcode" : "16", "physician" : "' + physician + '", "contact1" : "' + contact1 + '", "contact2" : "' + contact2 + '", "contact3" : "' + contact3 + '"}'
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 toSend = '{"opcode" : "16", "physician" : "", "contact1" : "", "contact2" : "", "contact3" : ""}'
                 print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend)  
         return toSend  
 
 
     def getStoveNumber(self, enteredUsername):
         stoveNum = self.retrieveStoveNumber(enteredUsername)
         toSend = '{"opcode" : "14", "stoveRegistered" : "' + stoveNum + '"}'
-        print(toSend)
         return toSend  
 
     def stoveExists(self, stoveID):
@@ -101,7 +103,7 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             count = [dict(i) for i in myresult]
             stoveCount = count[0].get('COUNT(*)')
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 stoveCount = 1
                 print ('\nDatabase Error %s:' % e.args[0])
@@ -115,7 +117,7 @@ class DatabaseServer:
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
         elif (self.stoveExists(stoveID) != 0):
@@ -124,7 +126,7 @@ class DatabaseServer:
                 myresult = self.__cursor.execute(mysql).fetchall()
                 maxStove = [dict(i) for i in myresult]
                 maxStoveNum = maxStove[0].get('stoveID')
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     maxStoveNum = 1
                     print ('\nDatabase Error %s:' % e.args[0])
@@ -136,11 +138,9 @@ class DatabaseServer:
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend) 
-        print(self.stoveExists(stoveID)) 
         return toSend  
 
     def retrieveAnalysisTableData(self, stoveID, username, tableName):
@@ -152,11 +152,10 @@ class DatabaseServer:
                 myresult = self.__cursorCooking.execute(mysql).fetchall()
                 list = [dict(i) for i in myresult]
                 toSend = '{"opcode" : "18", "data" : "' + str(list) +'"}'
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     toSend = '{"opcode" : "10", "data" : "''"}'
                     print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend)
         return toSend  
 
     def retrieveVideoList(self, stoveID):
@@ -168,11 +167,10 @@ class DatabaseServer:
                 myresult = self.__cursorCooking.execute(mysql).fetchall()
                 list = [dict(i) for i in myresult]
                 toSend = '{"opcode" : "10", "videoList" : "' + str(list) +'"}'
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     toSend = '{"opcode" : "10", "videoList" : "''"}'
                     print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend)
         return toSend 
 
     def retrieveUserLoginInfo(self, enteredUsername):
@@ -191,11 +189,10 @@ class DatabaseServer:
                 toSend = '{"opcode" : "2", "password" : "' + str(DBpassword) + '", "notifications" : "' + str(notifications) + '"}'              
             else:
                 toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}' 
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}'
                 print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend)  
         return toSend  
 
     def usernameExists(self, username, defaultValue):
@@ -204,11 +201,10 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             count = [dict(i) for i in myresult]
             userCount = count[0].get('COUNT(*)')
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 userCount = defaultValue
                 print ('\nDatabase Error %s:' % e.args[0])
-
         return userCount 
         
     def register(self, username, password, isPhysician):
@@ -223,7 +219,7 @@ class DatabaseServer:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
                 toSend = '{"opcode" : "4", "valid" : "yes"}'
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     toSend = '{"opcode" : "4", "valid" : "no"}'
                     print ('\nDatabase Error %s:' % e.args[0])
@@ -268,7 +264,7 @@ class DatabaseServer:
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
         if (contactThree == '' and contactTwo == '' and contactOne == ''):
@@ -284,7 +280,7 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             result = [dict(i) for i in myresult]
             isPhysician = result[0].get('isPhysician')
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
         return isPhysician 
@@ -302,13 +298,12 @@ class DatabaseServer:
         else:
             validity = 5
         toSend = '{"opcode" : "8", "physician" : "' + str(validity) + '"}'
-        print(toSend)
         if (validity == 4 or validity == 5):
             mysql = "UPDATE User_Login_Info SET physicianContact = '" + physician + "' WHERE username = '" + currentUser + "'"   
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
         return toSend    
@@ -318,7 +313,7 @@ class DatabaseServer:
         try:
             self.__cursor.execute(mysql)
             self.__dbconnect.commit()
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
     
@@ -328,7 +323,7 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             stoveInfo = [dict(i) for i in myresult]
             notif = stoveInfo[0].get('notifications')
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
         newNotifications = notif + ContactNotifications
@@ -344,7 +339,7 @@ class DatabaseServer:
                 contact1 = stoveInfo[0].get('firstContact')
                 contact2 = stoveInfo[0].get('secondContact')
                 contact3 = stoveInfo[0].get('thirdContact')
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
             if (contact1 != ""):
@@ -363,7 +358,7 @@ class DatabaseServer:
                 myresult = self.__cursor.execute(mysql).fetchall()
                 stoveInfo = [dict(i) for i in myresult]
                 physicianContact = stoveInfo[0].get('physicianContact')
-            except (sqlite3.Error, e):
+            except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
             if (physicianContact != ""):
@@ -375,7 +370,7 @@ class DatabaseServer:
         try:
             self.__cursor.execute(mysql)
             self.__dbconnect.commit()
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
 
@@ -386,11 +381,10 @@ class DatabaseServer:
             stoveInfo = [dict(i) for i in myresult]
             notif = stoveInfo[0].get('notifications')
             toSend = '{"opcode" : "22", "notifications" : "' + notif + '"}'
-        except (sqlite3.Error, e):
+        except sqlite3.Error as e:
             if (self.__DEBUG):
                 toSend = '{"opcode" : "22", "notifications" : ""}'
                 print ('\nDatabase Error %s:' % e.args[0])
-        print(toSend)
         return toSend
 
 def main():
