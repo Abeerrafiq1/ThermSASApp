@@ -96,9 +96,14 @@ public class viewStoveDataActivity extends AppCompatActivity{
                     if (isOnTooLong){
                         ArrayList<String> copyNotifications = new ArrayList<>();
                         copyNotifications.add(MainActivity.notifications.get(0));
-                        startActivity(new Intent(getApplicationContext(), popActivity.class));
-                        MainActivity.notifications.clear();
 
+                        String text = "The stove has        been on too long! \n Please check       on it!";
+                        Intent intent = new Intent(viewStoveDataActivity.this, popActivity.class);
+                        intent.putExtra("popupText", text);
+                        startActivity(intent);
+
+
+                        MainActivity.notifications.clear();
                         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String formattedTimeStamp = sdf3.format(timestamp);

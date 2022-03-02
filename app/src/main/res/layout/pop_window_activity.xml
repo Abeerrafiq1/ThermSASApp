@@ -7,10 +7,10 @@
     android:background = "@drawable/pop_bg">
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="304dp"
-        android:layout_height="174dp"
-        android:text="The stove has      been on too long! \n Please check        on it!"
+        android:id="@+id/popupText"
+        android:layout_width="282dp"
+        android:layout_height="176dp"
+        android:fontFamily="sans-serif-light"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="34sp"
@@ -31,6 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/popupText"
         app:layout_constraintVertical_bias="0.09" />
 </androidx.constraintlayout.widget.ConstraintLayout>

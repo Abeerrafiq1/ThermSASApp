@@ -8,6 +8,8 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -19,6 +21,13 @@ public class popActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pop_window_activity);
+
+        Intent intent = getIntent();
+        String popTxt = intent.getStringExtra("popupText");
+
+        TextView stoveID_editText = (TextView) findViewById(R.id.popupText);
+        stoveID_editText.setText(popTxt);
+
 
         DisplayMetrics dm  = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

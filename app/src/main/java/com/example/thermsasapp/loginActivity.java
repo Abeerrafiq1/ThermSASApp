@@ -53,14 +53,21 @@ public class loginActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "enter", Toast.LENGTH_SHORT).show();
                     JSONObject obj = new JSONObject((String) dbpassword.obj);
                     String password = obj.getString("password");
+                    String onTooLongNotif = "false";
                     if (!password_textview.getText().toString().isEmpty() && !username_textview.getText().toString().isEmpty() && password.equals(password_textview.getText().toString())) {
                         String notifications = obj.getString("notifications");
                         MainActivity.notifications.clear();
                         MainActivity.notifications.add(0, notifications);
 
+                        if (notifications.contains("has the stove on too long! Please make sure everything is okay")){
+                            onTooLongNotif = "true-contact";
+                        } else if (notifications.contains("Your stove was on too long!")){
+                            onTooLongNotif = "true-owner";
+                        }
                         Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
                         intent.putExtra("currentUser", username_textview.getText().toString());
+                        intent.putExtra("onTooLong", onTooLongNotif);
                         startActivity(intent);
                     } else {
                         Toast.makeText(mContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();

@@ -2,6 +2,8 @@ package com.example.thermsasapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +26,7 @@ public class mainOptionsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         currentUser = intent.getStringExtra("currentUser");
+
 
         Button addSubscriber = (Button) findViewById(R.id.addSubscriberButton);
         Button notification_button = (Button) findViewById(R.id.view_Notifications);
@@ -113,5 +116,25 @@ public class mainOptionsActivity extends AppCompatActivity {
 
             }
         });
+
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (intent.getStringExtra("onTooLong").equals("true-contact")) {
+                    String text = "A member has the stove on too long!\n Please check notifications!";
+                    Intent intent = new Intent(mainOptionsActivity.this, popActivity.class);
+                    intent.putExtra("popupText", text);
+                    startActivity(intent);
+                } else if (intent.getStringExtra("onTooLong").equals("true-owner")) {
+                    String text = "Your stove was on too long!\n Check stove and notifications!";
+                    Intent intent = new Intent(mainOptionsActivity.this, popActivity.class);
+                    intent.putExtra("popupText", text);
+                    startActivity(intent);
+                }
+            }
+        }, 400);
     }
+
+
 }
