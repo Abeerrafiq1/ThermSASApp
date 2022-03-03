@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:background = "@drawable/pop_bg">
 
+    <!-- @author: Abeer Rafiq
+     Corresponds to popActivity
+    -->
     <TextView
         android:id="@+id/popupText"
         android:layout_width="282dp"

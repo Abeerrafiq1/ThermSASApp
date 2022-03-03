@@ -1,34 +1,38 @@
 package com.example.thermsasapp;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+/**
+ @author: Abeer Rafiq
 
+ Purpose of Class: To display a pop up on the app and alert users
+ of events that need immediate action.
+ */
 public class popActivity extends Activity {
+
+    // Class variables
+    private TextView stoveID_editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        // Set app view
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pop_window_activity);
 
+        // Get currently logged in username from previous view
         Intent intent = getIntent();
         String popTxt = intent.getStringExtra("popupText");
 
-        TextView stoveID_editText = (TextView) findViewById(R.id.popupText);
+        // Update information displayed on pop up
+        stoveID_editText = (TextView) findViewById(R.id.popupText);
         stoveID_editText.setText(popTxt);
 
-
+        // To format the pop up view
         DisplayMetrics dm  = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
@@ -39,7 +43,5 @@ public class popActivity extends Activity {
         params.x = 0;
         params.y = -20;
         getWindow().setAttributes(params);
-
-
     }
 }

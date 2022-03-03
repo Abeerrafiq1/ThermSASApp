@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- @author: Abeer Rafiq
+     Corresponds to addContactsActivity
+    -->
+
     <TextView
         android:id="@+id/textView9"
         android:layout_width="279dp"

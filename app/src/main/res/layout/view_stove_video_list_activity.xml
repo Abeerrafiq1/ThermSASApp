@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- @author: Abeer Rafiq
+     Corresponds to viewStoveVideoListActivity
+    -->
 
     <android.widget.HorizontalScrollView
         android:id="@+id/scrollView"
@@ -49,7 +52,7 @@
         app:layout_constraintVertical_bias="0.998" />
 
     <EditText
-        android:id="@+id/editTextEnterNumber"
+        android:id="@+id/editTextEnterID"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:layout_below="@+id/scrollView"
@@ -65,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/enterNumber"
+        android:id="@+id/enterTableID"
         android:layout_width="116dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrollView"
@@ -75,7 +78,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="74dp"
         android:layout_marginEnd="257dp"
-        android:text="Table Number:"
+        android:text="Table ID:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent" />
 

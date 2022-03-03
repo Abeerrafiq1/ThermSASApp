@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <!-- @author: Abeer Rafiq
+     Corresponds to loginActivity
+    -->
+
     <Button
         android:id="@+id/loginbutton2"
         android:layout_width="280dp"

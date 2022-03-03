@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-
+    <!-- @author: Abeer Rafiq
+     Corresponds to viewStoveVideoAnalysisActivity
+    -->
     <android.widget.HorizontalScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"

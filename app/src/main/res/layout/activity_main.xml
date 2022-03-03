@@ -7,6 +7,10 @@
     tools:context=".MainActivity"
     android:background="@color/white">
 
+    <!-- @author: Abeer Rafiq
+         Corresponds to MainActivity
+     -->
+
     <Button
         android:id="@+id/loginbutton"
         android:layout_width="274dp"

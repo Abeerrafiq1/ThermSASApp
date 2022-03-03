@@ -24,14 +24,13 @@
 
         <activity android:name=".loginActivity"/>
         <activity android:name=".registerActivity"/>
-        <activity android:name=".addSubscribersActivity"/>
+        <activity android:name=".addContactsActivity"/>
         <activity android:name=".mainOptionsActivity"/>
         <activity android:name=".notificationActivity"/>
-        <activity android:name=".viewCookingListActivity"/>
-        <activity android:name=".viewStoveDataActivity"/>
+        <activity android:name=".viewStoveVideoListActivity"/>
+        <activity android:name=".viewStoveVideoAnalysisActivity"/>
         <activity android:name=".addStoveActivity"/>
-        <activity android:name=".addNotesActivity"/>
-        <activity android:name=".currentSubscribersActivity"/>
+        <activity android:name=".currentContactsActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

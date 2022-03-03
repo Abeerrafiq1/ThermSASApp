@@ -1,33 +1,34 @@
 package com.example.thermsasapp;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
-
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.regex.Pattern;
-
 import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.model.TableColumnDpWidthModel;
-import de.codecrafters.tableview.model.TableColumnWeightModel;
+import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
-public class viewStoveDataActivity extends AppCompatActivity{
-    Context mContext = this;
+/**
+ @author: Abeer Rafiq
+
+ Purpose of Class: To display the table data that corresponds to a recorded video of the registered stove.
+ It requests the database server to send the table data and then displays it in a table format.
+ */
+public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
+
+    // Class Variables
+    private Context mContext = this;
     public static Handler exHandler;
     private TableView tb_v;
     private sender Sender;
@@ -36,15 +37,22 @@ public class viewStoveDataActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Set app view
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_stove_data_activity);
+        setContentView(R.layout.view_stove_video_analysis_activity);
 
+        // Get currently logged in username from previous view
+        Intent intent = getIntent();
+        String currentUser = intent.getStringExtra("username");
+
+        // Set headers of the table (7 columns)
         String[] titles = {" Time Elapsed", "Classification", "  Pan Area", "  Pan Temp", "Number Food", "       Food Area", "       Food Temp"};
         tb_v = (TableView) findViewById(R.id.stoveData);
         tb_v.setHeaderBackgroundColor(Color.parseColor("#D2C5EA"));
         tb_v.setHeaderAdapter(new SimpleTableHeaderAdapter(mContext, titles));
         tb_v.setColumnCount(7);
 
+        // Set width of the table columns
         TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(mContext, 7, 150);
         columnModel.setColumnWidth(0, 150);
         columnModel.setColumnWidth(1, 150);
@@ -55,54 +63,68 @@ public class viewStoveDataActivity extends AppCompatActivity{
         columnModel.setColumnWidth(6, 400);
         tb_v.setColumnModel(columnModel);
 
-        Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("username");
-
+        // When database server sends a message containing the data for a stove analysis table
         exHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
+
+                // ArrayList to store the stove analysis table data
                 ArrayList<String[]> analysisTable = new ArrayList<>();
-                boolean isOnTooLong = false;
+
                 try {
+                    // Extract the video list from received message and initialize variables
                     JSONObject obj = new JSONObject((String) msg.obj);
                     String data = obj.getString("data");
+                    boolean isOnTooLong = false;
                     String[] record = {""};
                     final JSONObject[] object = new JSONObject[1];
                     final String[][] item = new String[1][1];
+
+                    // Parse the data to add each row of data into the analysisTable arrayList
                     if (!data.equals("")){
                         data = data.replace("[", "");
                         data = data.replace("]", "");
                         data = data.replaceAll("'", "\"");
                         data = data.substring(0, data.length() - 1);
                         record = data.split(Pattern.quote("}, "));
+
                         for (int i = 0; i < record.length; i++) {
                             record[i] = record[i] + "}";
                             object[0] = new JSONObject((String) record[i]);
-                             item[0] = new String[]{object[0].getString("time_elapsed"), object[0].getString("classification"), object[0].getString("pan_area"),
-                                     object[0].getString("pan_temp"), object[0].getString("num_food"),
-                                     "["+object[0].getString("food_area")+"]", "["+object[0].getString("food_temp")+"]"};
+                            item[0] = new String[]{object[0].getString("time_elapsed"), object[0].getString("classification"), object[0].getString("pan_area"),
+                                    object[0].getString("pan_temp"), object[0].getString("num_food"),
+                                    "["+object[0].getString("food_area")+"]", "["+object[0].getString("food_temp")+"]"};
                             analysisTable.add(item[0]);
+
+                            // If classification is determined to risky, set isOnTooLong to true to send corresponding notifications (last if statement of this code)
                             if (object[0].getString("classification").equals("on too long")){
                                 isOnTooLong = true;
                             }
                         }
                     }
+                    // To show data corresponding to end of video first
                     Collections.reverse(analysisTable);
-                    SSimpleTableDataAdapter simple = new SSimpleTableDataAdapter(viewStoveDataActivity.this, analysisTable);
+
+                    // Update the table data adapter to contain the table data and update table in app's view
+                    SimpleTableDataAdapter simple = new SimpleTableDataAdapter(viewStoveVideoAnalysisActivity.this, analysisTable);
                     simple.setTextSize(15);
+                    simple.setPaddings(100, 15, 20, 15);
                     tb_v.setDataAdapter(simple);
 
+                    // If classification is determined to risky, show pop up and update corresponding notifications
                     if (isOnTooLong){
-                        ArrayList<String> copyNotifications = new ArrayList<>();
-                        copyNotifications.add(MainActivity.notifications.get(0));
-
+                        // Show a pop up to alert user of risk
                         String text = "The stove has        been on too long! \n Please check       on it!";
-                        Intent intent = new Intent(viewStoveDataActivity.this, popActivity.class);
+                        Intent intent = new Intent(viewStoveVideoAnalysisActivity.this, popActivity.class);
                         intent.putExtra("popupText", text);
                         startActivity(intent);
 
+                        //Create a copy of the notifications ArrayList
+                        ArrayList<String> copyNotifications = new ArrayList<>();
+                        copyNotifications.add(MainActivity.notifications.get(0));
 
+                        // Create notifications and update notifications in ArrayList
                         MainActivity.notifications.clear();
                         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -110,6 +132,8 @@ public class viewStoveDataActivity extends AppCompatActivity{
                         String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\nYour stove was on too long!\nNotifications have been sent to your contacts\n\n-----------------------------------------";
                         String contactNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has the stove on too long! Please make sure everything is okay\n\n-----------------------------------------";
                         MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+
+                        // Send database server message to update notifications of user and contacts in the database server
                         JSONObject userinfo = new JSONObject();
                         try {
                             userinfo.put("opcode", "19");
@@ -118,12 +142,14 @@ public class viewStoveDataActivity extends AppCompatActivity{
                             userinfo.put("ContactNotifications", contactNotification);
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.d("AppDebug", "Error! " + e.toString());
                         }
                         Sender = new sender();
                         Sender.run(databaseServerAddr, userinfo.toString(),  senderPort);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("AppDebug", "Error! " + e.toString());
                 }
             }
         };
