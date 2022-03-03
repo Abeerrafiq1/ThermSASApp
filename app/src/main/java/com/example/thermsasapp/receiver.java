@@ -11,6 +11,7 @@ import java.net.SocketException;
  @author: Abeer Rafiq
 
  Purpose of Class: To receive messages and acknowledgements from the database server.
+ The app must communicate with the database server to extract or update data in the databases.
  Then, forward the received message to the appropriate activity for exHandler to handle.
  */
 class receiver extends Thread {

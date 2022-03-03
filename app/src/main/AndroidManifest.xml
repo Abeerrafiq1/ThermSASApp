@@ -18,10 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".popActivity"
+        <activity android:name=".alertPopUpActivity"
             android:theme = "@style/Theme.ThermSASApp.CustomTheme">
         </activity>
-
+        <activity android:name=".detailPopUpActivity"
+            android:theme = "@style/Theme.ThermSASApp.CustomTheme">
+        </activity>
         <activity android:name=".loginActivity"/>
         <activity android:name=".registerActivity"/>
         <activity android:name=".addContactsActivity"/>
@@ -30,6 +32,7 @@
         <activity android:name=".viewStoveVideoListActivity"/>
         <activity android:name=".viewStoveVideoAnalysisActivity"/>
         <activity android:name=".addStoveActivity"/>
+        <activity android:name=".logoutActivity"/>
         <activity android:name=".currentContactsActivity"/>
 
         <meta-data

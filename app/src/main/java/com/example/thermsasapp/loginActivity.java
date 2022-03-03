@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -57,6 +58,22 @@ public class loginActivity extends AppCompatActivity {
             Sender.run(databaseServerAddr, userinfo.toString(),  senderPort);
         });
 
+        // If user wants to see details about login
+        Button details_button = (Button) findViewById(R.id.details5);
+        details_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(loginActivity.this, detailPopUpActivity.class);
+                intent2.putExtra("height", "0.3");
+                intent2.putExtra("popupText", "\n\n\n\n\n\n\n\nABOUT LOGIN: " +
+                        "\n\n * Username and password are both case sensitive" +
+                        "\n * Do not add extra spaces" +
+                        "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                startActivity(intent2);
+            }
+        });
+
+
         // After database server sends stored password of user, compare it against user entered password
         exHandler = new Handler() {
             @Override
@@ -89,9 +106,15 @@ public class loginActivity extends AppCompatActivity {
                         Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
                         intent.putExtra("currentUser", editTextUsername.getText().toString());
                         intent.putExtra("onTooLong", onTooLongNotif);
+                        // Clear editTexts so if you go back from main options activity, credentials have to be re-entered
+                        editTextUsername.setText("");
+                        editTextPassword.setText("");
                         startActivity(intent);
                     } else {
                         Toast.makeText(mContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
+                        // Clear edit texts so credentials have to be re-entered since they are wrong
+                        editTextUsername.setText("");
+                        editTextPassword.setText("");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -174,6 +174,25 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+                    // If user wants to see details about how viewing stove analysis tables works
+                    Button details_button = (Button) findViewById(R.id.viewData2);
+                    details_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent2 = new Intent(viewStoveVideoListActivity.this, detailPopUpActivity.class);
+                            intent2.putExtra("height", "0.60");
+                            intent2.putExtra("popupText", "\n\nABOUT STOVE ANALYSIS TABLES: " +
+                                    "\n\n * Each analysis table corresponds to a recorded stove video" +
+                                    "\n * If no stove is registered, this list will remain empty " +
+                                    "\n * If no recorded videos for registered stove, list will be empty " +
+                                    "\n\n ENTERING TABLE ID " +
+                                    "\n\n * Must have a stove registered with videos recorded " +
+                                    "\n * Must enter a table ID from list provided on page" +
+                                    "\n\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                            startActivity(intent2);
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("AppDebug", "Error! " + e.toString());

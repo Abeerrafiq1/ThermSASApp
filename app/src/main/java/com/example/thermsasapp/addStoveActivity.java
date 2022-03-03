@@ -69,6 +69,24 @@ public class addStoveActivity extends AppCompatActivity {
             }
         });
 
+        // If user wants to see details about how stove registration/clearing works
+        Button details_button = (Button) findViewById(R.id.details3);
+        details_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(addStoveActivity.this, detailPopUpActivity.class);
+                intent2.putExtra("height", "0.55");
+                intent2.putExtra("popupText", "\n\n\nREGISTRATION OF STOVE: " +
+                        "\n\n * Enter ID corresponding to stove that the thermal camera monitors " +
+                        "\n * The stove ID must not be registered already " +
+                        "\n * ID is used to view stove analysis data corresponding to stove ID " +
+                        "\n\n UNREGISTERING STOVE " +
+                        "\n\n * Leave stove ID field empty and press REGISTER STOVE button" +
+                        "\n\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                startActivity(intent2);
+            }
+        });
+
         // Opcode 12:
         // When database server sends a message for successful/unsuccessful registration, take appropriate action
         // If stove ID cleared or registered, update notifications
@@ -99,7 +117,7 @@ public class addStoveActivity extends AppCompatActivity {
                             Toast.makeText(mContext, "Stove registered successfully!", Toast.LENGTH_SHORT).show();
                             updateText.setText(stoveID_editText.getText().toString());
                             updateNotifications = true;
-                            notification = "Stove #" + stoveID_editText.getText().toString() + " has been registered successfully!";
+                            notification = "Stove with ID " + stoveID_editText.getText().toString() + " has been registered successfully!";
                         }
                         // If successfully cleared stove ID, update textView; should update notifications
                         else if (validity.equals("empty")){

@@ -1,9 +1,12 @@
 package com.example.thermsasapp;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
@@ -32,6 +35,22 @@ public class currentContactsActivity extends AppCompatActivity {
         contact1 = (TextView) findViewById(R.id.contact1Text);
         contact2 = (TextView) findViewById(R.id.contact2Text);
         contact3  = (TextView) findViewById(R.id.contact3Text);
+
+        // If user wants to see details about viewing contacts
+        Button details_button = (Button) findViewById(R.id.details4);
+        details_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(currentContactsActivity.this, detailPopUpActivity.class);
+                intent2.putExtra("height", "0.4");
+                intent2.putExtra("popupText", "\n\n\n\n\n\nABOUT CONTACTS: " +
+                        "\n\n * These are contacts currently added to your account" +
+                        "\n * The primary contacts will receive notifications in the case of a stove emergency " +
+                        "\n * The physician contact will receive notifications about cooking trends " +
+                        "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                startActivity(intent2);
+            }
+        });
 
         // When database server sends a message with the currently stored contacts for user
         // update the TextViews

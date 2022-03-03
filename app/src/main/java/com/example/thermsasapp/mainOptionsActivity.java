@@ -21,6 +21,8 @@ import org.json.JSONObject;
  -view stove data
  -add contacts
  -current contacts
+
+  There is also a log out option.
  */
 public class mainOptionsActivity extends AppCompatActivity {
 
@@ -28,7 +30,7 @@ public class mainOptionsActivity extends AppCompatActivity {
     private sender Sender;
     private String databaseServerAddr = "192.168.137.1";
     private static final int senderPort = 1000;
-    private Button addContacts, notification_button, stoveData_button, addStove_button, currentContacts;
+    private Button addContacts, notification_button, stoveData_button, addStove_button, currentContacts, logout;
     private String currentUser;
 
     @Override
@@ -47,6 +49,7 @@ public class mainOptionsActivity extends AppCompatActivity {
         stoveData_button = (Button) findViewById(R.id.view_stoveData);
         addStove_button = (Button) findViewById(R.id.addStoveBtn);
         currentContacts = (Button) findViewById(R.id.currentContacts);
+        logout = (Button) findViewById(R.id.logout);
 
         // If user requests to view notifications, start the notificationActivity
         notification_button.setOnClickListener(new View.OnClickListener() {
@@ -141,9 +144,17 @@ public class mainOptionsActivity extends AppCompatActivity {
             }
         });
 
+        // If user requests to log out, start the MainActivity
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainOptionsActivity.this, logoutActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // If user has a notification that needs immediate attention, show a pop up
-        // after 400ms of logging in
+        // after 600ms of logging in
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -151,7 +162,7 @@ public class mainOptionsActivity extends AppCompatActivity {
                 if (intent.getStringExtra("onTooLong").equals("true-contact")) {
                     String text = "A member has the stove on too long!\n Please check notifications!";
 
-                    Intent intent = new Intent(mainOptionsActivity.this, popActivity.class);
+                    Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);
                     startActivity(intent);
                 }
@@ -159,11 +170,11 @@ public class mainOptionsActivity extends AppCompatActivity {
                 else if (intent.getStringExtra("onTooLong").equals("true-owner")) {
                     String text = "Your stove was on too long!\n Check stove and notifications!";
 
-                    Intent intent = new Intent(mainOptionsActivity.this, popActivity.class);
+                    Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);
                     startActivity(intent);
                 }
             }
-        }, 400);
+        }, 700);
     }
 }

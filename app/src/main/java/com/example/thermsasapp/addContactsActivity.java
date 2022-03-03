@@ -93,6 +93,29 @@ public class addContactsActivity extends AppCompatActivity {
             }
         });
 
+        // If user wants to see details about adding contacts
+        Button details_button = (Button) findViewById(R.id.details);
+        details_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(addContactsActivity.this, detailPopUpActivity.class);
+                intent2.putExtra("height", "0.7");
+                intent2.putExtra("popupText", "PHYSICIAN CONTACTS: " +
+                        "\n * To register a physician, enter a username that is already registered as a physician (it can not be yourself)" +
+                        "\n * To clear a physician, leave field empty" +
+                        "\n * Then, press ADD PHYSICIAN button" +
+                        "\n\n PRIMARY CONTACTS " +
+                        "\n * Only three contacts allowed per account" +
+                        "\n * Each time three contacts are added, previous ones are cleared" +
+                        "\n * To register a primary contact, enter a username that is already registered (it can not be yourself) " +
+                        "\n * Primary contacts can't be repeated but can be left empty " +
+                        "\n * To clear all primary contacts, leave all primary contact fields empty" +
+                        "\n * Then, press ADD PRIMARY CONTACTS" +
+                        "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                startActivity(intent2);
+            }
+        });
+
         // Opcode 7:
         // When database server sends a message for successful/unsuccessful contact registration
         // If contacts determined to be successfully added, send notification to stove owner and those contacts

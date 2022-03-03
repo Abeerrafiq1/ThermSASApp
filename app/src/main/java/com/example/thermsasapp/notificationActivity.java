@@ -7,6 +7,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,6 +101,27 @@ public class notificationActivity extends AppCompatActivity {
                             }
                             Sender = new sender();
                             Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
+                        }
+                    });
+
+                    // If user wants to see details about how notifications work
+                    Button details_button = (Button) findViewById(R.id.details66);
+                    details_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent2 = new Intent(notificationActivity.this, detailPopUpActivity.class);
+                            intent2.putExtra("height", "0.65");
+                            intent2.putExtra("popupText", "\nTYPES OF NOTIFICATIONS: " +
+                                    "\n\n * A stove has been unregistered " +
+                                    "\n * A stove ID has been registered " +
+                                    "\n * Contacts have been cleared or added " +
+                                    "\n * Stove needs immediate attention due to risk " +
+                                    "\n * Stove owner has added you as a contact " +
+                                    "\n * Stove owner that has added you as a contact needs immediate attention due to risk of their stove" +
+                                    "\n\n CLEAR NOTIFICATIONS " +
+                                    "\n\n * Can be used to remove all previous notifications" +
+                                    "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                            startActivity(intent2);
                         }
                     });
                 } catch (JSONException e) {

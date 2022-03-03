@@ -13,7 +13,7 @@ import android.widget.TextView;
  Purpose of Class: To display a pop up on the app and alert users
  of events that need immediate action.
  */
-public class popActivity extends Activity {
+public class alertPopUpActivity extends Activity {
 
     // Class variables
     private TextView stoveID_editText;
@@ -22,7 +22,7 @@ public class popActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         // Set app view
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pop_window_activity);
+        setContentView(R.layout.alert_pop_window_activity);
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();

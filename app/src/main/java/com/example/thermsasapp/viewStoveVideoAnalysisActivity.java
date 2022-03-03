@@ -116,7 +116,7 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                     if (isOnTooLong){
                         // Show a pop up to alert user of risk
                         String text = "The stove has        been on too long! \n Please check       on it!";
-                        Intent intent = new Intent(viewStoveVideoAnalysisActivity.this, popActivity.class);
+                        Intent intent = new Intent(viewStoveVideoAnalysisActivity.this, alertPopUpActivity.class);
                         intent.putExtra("popupText", text);
                         startActivity(intent);
 

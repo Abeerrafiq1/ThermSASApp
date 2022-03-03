@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -52,6 +53,8 @@ public class registerActivity extends AppCompatActivity {
             // If blank username and password entered, they are invalid
             if (enteredPassword.getText().toString().isEmpty() || enteredUsername.getText().toString().isEmpty()){
                 Toast.makeText(mContext, "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                enteredUsername.setText("");
+                enteredPassword.setText("");
             } else {
                 // Send request to database server
                 JSONObject userinfo = new JSONObject();
@@ -69,6 +72,22 @@ public class registerActivity extends AppCompatActivity {
             }
         });
 
+        // If user wants to see details about registration
+        Button details_button = (Button) findViewById(R.id.details7);
+        details_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(registerActivity.this, detailPopUpActivity.class);
+                intent2.putExtra("height", "0.4");
+                intent2.putExtra("popupText", "\n\n\n\n\n\nABOUT REGISTRATION: " +
+                        "\n\n * You must enter a username that doesn't already exist" +
+                        "\n * You will be re-directed to login page after registration" +
+                        "\n * If you are a licensed physician, then click on the check box" +
+                        "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
+                startActivity(intent2);
+            }
+        });
+
         // If database server noticed that the username is already registered, then registration failed
         // The user has to enter a different username to register
         exHandler = new Handler() {
@@ -83,9 +102,13 @@ public class registerActivity extends AppCompatActivity {
                     // If valid username, redirect activity to loginActivity, else show message to enter new username
                     if (validity.equals("yes")){
                         Toast.makeText(mContext, "Redirecting to Login", Toast.LENGTH_SHORT).show();
+                        enteredUsername.setText("");
+                        enteredPassword.setText("");
                         startActivity(new Intent(registerActivity.this, loginActivity.class));
                     } else {
                         Toast.makeText(mContext, "User Already Exists!\n Please use a different Username", Toast.LENGTH_SHORT).show();
+                        enteredUsername.setText("");
+                        enteredPassword.setText("");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

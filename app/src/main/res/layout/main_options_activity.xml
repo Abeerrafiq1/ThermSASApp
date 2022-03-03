@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- @author: Abeer Rafiq
      Corresponds to mainOptionsActivity
     -->
+
     <Button
         android:id="@+id/view_Notifications"
         android:layout_width="258dp"
@@ -18,65 +18,80 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.162" />
-
-    <Button
-        android:id="@+id/addContactsButton"
-        android:layout_width="256dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Add Contacts"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_stoveData" />
-
-    <Button
-        android:id="@+id/currentContacts"
-        android:layout_width="258dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Current Contacts"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.477"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addContactsButton" />
-
-    <Button
-        android:id="@+id/addStoveBtn"
-        android:layout_width="251dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Add/View Stove ID"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_Notifications" />
+        app:layout_constraintVertical_bias="0.128" />
 
     <Button
         android:id="@+id/view_stoveData"
-        android:layout_width="252dp"
-        android:layout_height="58dp"
+        android:layout_width="258dp"
+        android:layout_height="62dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="#D2C5EA"
         android:text="View Stove Data"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addStoveBtn" />
+
+    <Button
+        android:id="@+id/addStoveBtn"
+        android:layout_width="258dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Add/View Stove ID"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_Notifications" />
+
+    <Button
+        android:id="@+id/addContactsButton"
+        android:layout_width="258dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Add Contacts"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_stoveData" />
+
+    <Button
+        android:id="@+id/currentContacts"
+        android:layout_width="258dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Current Contacts"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addContactsButton" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="94dp"
+        android:layout_height="43dp"
+        android:backgroundTint="#D2C5EA"
+        android:text="Log out"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.962" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
