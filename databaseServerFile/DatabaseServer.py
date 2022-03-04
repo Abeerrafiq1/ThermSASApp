@@ -16,7 +16,8 @@ class DatabaseServer:
     def __init__(self, portReceive, appSendport, app_ip_addrs, debug):
         # To show print statements on console
         self.__DEBUG = debug
-        # Set port and socket to receive requests from app
+        # Set port and socke
+        # t to receive requests from app
         self.__port = int(portReceive)
         self.__soc_recv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recv_address = ('', self.__port)
@@ -87,9 +88,9 @@ class DatabaseServer:
         
         # If Debug, print messages sent to app unless they are too long to display or contain password
         if (self.__DEBUG and (strToString.find('"opcode" : "2"') != -1)):
-            print('\nMessage has been sent to App : ' + '{"opcode" : "2", "password" : -hidden- , "notifications" : -too long to display- }')
+            print('\nMessage has been sent to App : ' + '{"opcode" : "2", "password" : -hidden- , "messages" : -too long to display- }')
         elif (self.__DEBUG and (strToString.find('"opcode" : "22"') != -1)): 
-            print('\nMessage has been sent to App : ' + '{"opcode" : "22", "notifications" : -too long to display- }')
+            print('\nMessage has been sent to App : ' + '{"opcode" : "22", "messages" : -too long to display- }')
         elif (self.__DEBUG) : 
             print("\nMessage has been sent to App : " + strToString)
         
@@ -162,7 +163,7 @@ class DatabaseServer:
     # Returns a msg with the stove ID stored to send to the app.
     def getStoveID(self, enteredUsername):
         stoveNum = self.retrieveStoveID(enteredUsername)
-        toSend = '{"opcode" : "14", "stoveRegistered" : "' + stoveNum + '"}'
+        toSend = '{"opcode" : "14", "stoveRegistered" : "' + str(stoveNum) + '"}'
         # Return msg with stove ID to send to app
         return toSend  
 
@@ -211,13 +212,13 @@ class DatabaseServer:
     # When user wants to register a stove ID to a user's account, this method updates the stoveID
     # for the user.
     # Returns appropriate message to send to app with opcode.
-    def addStoveID(self, currentUser, stoveID):
+    def addStoveID(self, username, stoveID):
         # If no stove ID entered (blank), it means database server has to clear the registered stove
         if (stoveID == ""):
             # Create cleared stoveID msg to send back to the app 
             toSend = '{"opcode" : "12", "validity" : "empty", "maxStoveID" : ""}'
             # Update data in loginDB, table User_Login_Info to clear registered stove
-            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"  
+            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + username + "'"  
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
@@ -241,14 +242,14 @@ class DatabaseServer:
                     toSend = '{"opcode" : "12", "validity" : "no", "maxStoveID" : ""}'
             # Create msg to send to app with maximum stove number 
             # The app will suggest user to set stove ID to max stove number + 1
-            toSend = '{"opcode" : "12", "validity" : "no", "maxStoveID" : "' + maxStoveNum + '"}'
+            toSend = '{"opcode" : "12", "validity" : "no", "maxStoveID" : "' + str(maxStoveNum) + '"}'
         
         # If valid stove ID entered by user
         else:
             # Create appropriate msg to send to app
             toSend = '{"opcode" : "12", "validity" : "yes", "maxStoveID" : ""}'
             # Update stove ID for user in loginDB, table User_Login_Info
-            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + currentUser + "'"
+            mysql = "UPDATE User_Login_Info SET stoveID = '" + stoveID + "' WHERE username = '" + username + "'"
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
@@ -306,7 +307,7 @@ class DatabaseServer:
         return toSend 
 
     # When user wants to login, this method retrieves the user's password (to compare against the entered password)
-    # and gets notifications for the user.
+    # and gets messages for the user.
     # Returns appropriate message to send to app with opcode.
     def retrieveUserLoginInfo(self, enteredUsername):
         try:
@@ -315,25 +316,25 @@ class DatabaseServer:
             myresult = self.__cursor.execute(mysql).fetchall()
             password = [dict(i) for i in myresult]
             
-            # Retrieve notifications stored in loginDB, table User_Login_Info
-            mysql = """SELECT """ + """notifications FROM User_Login_Info WHERE username = '""" + str(enteredUsername) +"""'"""
+            # Retrieve messages stored in loginDB, table User_Login_Info
+            mysql = """SELECT """ + """messages FROM User_Login_Info WHERE username = '""" + str(enteredUsername) +"""'"""
             myresult = self.__cursor.execute(mysql).fetchall()
-            notification = [dict(i) for i in myresult]
+            message = [dict(i) for i in myresult]
 
             # If password isn't empty
             if (len(password) > 0):
-                # Extract password and notifications
+                # Extract password and messages
                 DBpassword = password[0].get('password')
-                notifications = notification[0].get('notifications')
-                # Create msg with password and notifications to send to app
-                toSend = '{"opcode" : "2", "password" : "' + str(DBpassword) + '", "notifications" : "' + str(notifications) + '"}'              
+                messages = message[0].get('messages')
+                # Create msg with password and messages to send to app
+                toSend = '{"opcode" : "2", "password" : "' + str(DBpassword) + '", "messages" : "' + str(messages) + '"}'              
             else:
-                toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}' 
+                toSend = '{"opcode" : "2", "password" : "", "messages" : "''"}' 
         except sqlite3.Error as e:
             if (self.__DEBUG):
-                toSend = '{"opcode" : "2", "password" : "", "notifications" : "''"}'
+                toSend = '{"opcode" : "2", "password" : "", "messages" : "''"}'
                 print ('\nDatabase Error %s:' % e.args[0])
-        # Return appropriate msg to send to app with notifications and password
+        # Return appropriate msg to send to app with messages and password
         return toSend  
 
     # To check if username in database already exists.
@@ -384,14 +385,14 @@ class DatabaseServer:
     # When user wants to add regular contacts to the database, this method checks to see if contacts 
     # are valid and then updates the contacts for the user.
     # Returns appropriate message to send to app with opcode.
-    def addRegularContacts(self, currentUser, contactOne, contactTwo, contactThree):
+    def addRegularContacts(self, username, contactOne, contactTwo, contactThree):
         # Check Validity of contact 1
         if (contactOne != ''):
             # If username doesn't exist, it is invalid to add as contact
             if (self.usernameExists(contactOne, 0) != 1):
                 one = 1
             # If username is current User, it is invalid to add the user them self
-            elif (contactOne == currentUser):
+            elif (contactOne == username):
                 one = 2
             # If there are repeated contacts, it is invalid
             elif (contactOne == contactTwo) or (contactOne == contactThree):
@@ -409,7 +410,7 @@ class DatabaseServer:
             if (self.usernameExists(contactTwo, 0) != 1):
                 two = 1
             # If username is current User, it is invalid to add the user them self
-            elif (contactTwo == currentUser):
+            elif (contactTwo == username):
                 two = 2
             # If there are repeated contacts, it is invalid
             elif (contactTwo == contactOne) or (contactTwo == contactThree):
@@ -427,7 +428,7 @@ class DatabaseServer:
             if (self.usernameExists(contactThree, 0) != 1):
                 three = 1
             # If username is current User, it is invalid to add the user them self
-            elif (contactThree == currentUser):
+            elif (contactThree == username):
                 three = 2
             # If there are repeated contacts, it is invalid
             elif (contactThree == contactOne) or (contactThree == contactTwo):
@@ -441,7 +442,7 @@ class DatabaseServer:
 
         # If valid contacts to add or to clear contacts, update database contacts
         if (one == 4 and two == 4 and three == 4):
-            mysql = "UPDATE User_Login_Info SET firstContact = '" + contactOne + "', secondContact = '" + contactTwo + "', thirdContact = '" + contactThree + "' WHERE username = '" + currentUser + "'"   
+            mysql = "UPDATE User_Login_Info SET firstContact = '" + contactOne + "', secondContact = '" + contactTwo + "', thirdContact = '" + contactThree + "' WHERE username = '" + username + "'"   
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
@@ -477,7 +478,7 @@ class DatabaseServer:
     
     # When user wants to add a physician contact (username must be a physician), this method adds the physician.
     # Returns appropriate message to send to app with opcode.
-    def addPhysicianContact(self, currentUser, physician):
+    def addPhysicianContact(self, username, physician):
         # If not empty username
         if (physician != ''):
             # If physician username doesn't exist, invalid
@@ -487,7 +488,7 @@ class DatabaseServer:
             elif (self.checkIfPhysician(physician) == 'No'):
                 validity = 2
             # If physician to add is the stove owner them self
-            elif (physician == currentUser):
+            elif (physician == username):
                 validity = 3
             # Valid to add physician
             else:
@@ -501,7 +502,7 @@ class DatabaseServer:
 
         # If physician is valid to add or to clear, update in loginDB, table User_Login_Info
         if (validity == 4 or validity == 5):
-            mysql = "UPDATE User_Login_Info SET physicianContact = '" + physician + "' WHERE username = '" + currentUser + "'"   
+            mysql = "UPDATE User_Login_Info SET physicianContact = '" + physician + "' WHERE username = '" + username + "'"   
             try:
                 self.__cursor.execute(mysql)
                 self.__dbconnect.commit()
@@ -511,47 +512,47 @@ class DatabaseServer:
         # Send appropriate msg to app
         return toSend    
 
-    # This method updates notifications for a given username.
-    # Used by getAndSetNotification method.
-    def setNotifications(self, username, Notifications):
-        mysql = "UPDATE User_Login_Info SET notifications = '" + Notifications + "' WHERE username = '" + username + "'"
+    # This method updates messages for a given username.
+    # Used by getAndSetMessage method.
+    def setMessages(self, username, Messages):
+        mysql = "UPDATE User_Login_Info SET messages = '" + Messages + "' WHERE username = '" + username + "'"
         try:
-            # Update notifications for user in loginDB, table User_Login_Info
+            # Update messages for user in loginDB, table User_Login_Info
             self.__cursor.execute(mysql)
             self.__dbconnect.commit()
         except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
     
-    # This method gets the notification for a user, updates the notification string
-    # and then calls another method to set the new notifications.
-    # Used by updateUserAndContactNotifications and updateUserAndPhysicianNotifications methods.
-    def getAndSetNotification(self, username, ContactNotifications):
-        mysql = """SELECT """ + """notifications FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+    # This method gets the message for a user, updates the message string
+    # and then calls another method to set the new messages.
+    # Used by updateUserAndContactMessages and updateUserAndPhysicianMessages methods.
+    def getAndSetMessage(self, username, ContactMessages):
+        mysql = """SELECT """ + """messages FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
         try:
-            # Retrieve previously stored notifications for user from loginDB, table User_Login_Info
+            # Retrieve previously stored messages for user from loginDB, table User_Login_Info
             myresult = self.__cursor.execute(mysql).fetchall()
             stoveInfo = [dict(i) for i in myresult]
-            # Extract notifications
-            notif = stoveInfo[0].get('notifications')
+            # Extract messages
+            notif = stoveInfo[0].get('messages')
         except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
-        # Join the previously stored notifications with the new notification message passed in
-        newNotifications = notif + ContactNotifications
-        # Update the notifications in the database 
-        self.setNotifications(username, newNotifications)
+        # Join the previously stored messages with the new message message passed in
+        newMessages = notif + ContactMessages
+        # Update the messages in the database 
+        self.setMessages(username, newMessages)
    
-    # When the stove owner and regular contact notifications are to be updated (not physician),
-    # then this method calls required methods to update notifications of stove owner and all three users.
+    # When the stove owner and regular contact messages are to be updated (not physician),
+    # then this method calls required methods to update messages of stove owner and all three users.
     # Doesn't require information to be returned back to app.
-    def updateUserAndContactNotifications(self, username, UserNotifications, ContactNotifications):
-        # Update stove owner's notifications
-        self.getAndSetNotification(username, UserNotifications)
-        # ContactNotifications can be "" when only the stove owner's notifications are to be updated
+    def updateUserAndContactMessages(self, username, UserMessages, ContactMessages):
+        # Update stove owner's messages
+        self.getAndSetMessage(username, UserMessages)
+        # ContactMessages can be "" when only the stove owner's messages are to be updated
         # such as when the stove owner registers a stove
-        if (ContactNotifications != ""):
-            # Contact notifications are to be updated
+        if (ContactMessages != ""):
+            # Contact messages are to be updated
             # Retrieve the three contacts of the stove owner from loginDB, table User_Login_Info
             mysql = """SELECT """ + """firstContact, secondContact, thirdContact FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
             try:
@@ -564,21 +565,21 @@ class DatabaseServer:
             except sqlite3.Error as e:
                 if (self.__DEBUG):
                     print ('\nDatabase Error %s:' % e.args[0])
-            # If the contacts are not empty, update the contact's notifications
+            # If the contacts are not empty, update the contact's messages
             if (contact1 != ""):
-                self.getAndSetNotification(contact1, ContactNotifications)
+                self.getAndSetMessage(contact1, ContactMessages)
             if (contact2 != ""):
-                self.getAndSetNotification(contact2, ContactNotifications)
+                self.getAndSetMessage(contact2, ContactMessages)
             if (contact3 != ""):
-                self.getAndSetNotification(contact3, ContactNotifications)
+                self.getAndSetMessage(contact3, ContactMessages)
 
-    # When the stove owner and physician notifications are to be updated,
-    # then this method calls required methods to update notifications for stove owner and physician.
+    # When the stove owner and physician messages are to be updated,
+    # then this method calls required methods to update messages for stove owner and physician.
     # Doesn't require information to be returned back to app.
-    def updateUserAndPhysicianNotifications(self, username, UserNotifications, PhysicianNotifications):
-        # Update stove owner's notifications
-        self.getAndSetNotification(username, UserNotifications)
-        # Physician notifications are to be updated
+    def updateUserAndPhysicianMessages(self, username, UserMessages, PhysicianMessages):
+        # Update stove owner's messages
+        self.getAndSetMessage(username, UserMessages)
+        # Physician messages are to be updated
         # Retrieve the Physician contact of the stove owner from loginDB, table User_Login_Info
         mysql = """SELECT """ + """physicianContact FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
         try:
@@ -589,16 +590,16 @@ class DatabaseServer:
         except sqlite3.Error as e:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
-        # If the physician contact is not empty, update the physician's notifications
+        # If the physician contact is not empty, update the physician's messages
         if (physicianContact != ""):
-            self.getAndSetNotification(physicianContact, PhysicianNotifications)
+            self.getAndSetMessage(physicianContact, PhysicianMessages)
 
-    # When the user wants to clear their notifications, this method
-    # clears previous notifications. 
+    # When the user wants to clear their messages, this method
+    # clears previous messages. 
     # Doesn't require information to be returned back to app.
-    def clearNotifications(self, username):
-        # Clear notifications: set notifications as --- line to act as a notification separator for future notifications
-        mysql = "UPDATE User_Login_Info SET notifications = '-----------------------------------------' WHERE username = '" + username + "'"
+    def clearMessages(self, username):
+        # Clear messages: set messages as --- line to act as a message separator for future messages
+        mysql = "UPDATE User_Login_Info SET messages = '-----------------------------------------' WHERE username = '" + username + "'"
         try:
             self.__cursor.execute(mysql)
             self.__dbconnect.commit()
@@ -606,22 +607,80 @@ class DatabaseServer:
             if (self.__DEBUG):
                 print ('\nDatabase Error %s:' % e.args[0])
 
-    # When user presses the view notifications button, this method
-    # gets notifications from database and puts them into a string
+    # When user presses the view messages button, this method
+    # gets messages from database and puts them into a string
     # with the appropriate format to return to send to the app.
-    def getNotifications(self, username):
-        # Retrieve stored notifications for user from loginDB, table User_Login_Info 
-        mysql = """SELECT """ + """notifications FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+    def getMessages(self, username):
+        # Retrieve stored messages for user from loginDB, table User_Login_Info 
+        mysql = """SELECT """ + """messages FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
         try:
             myresult = self.__cursor.execute(mysql).fetchall()
             stoveInfo = [dict(i) for i in myresult]
-            # Extract notifications
-            notif = stoveInfo[0].get('notifications')
-            # Create meg with notifications to send to app
-            toSend = '{"opcode" : "22", "notifications" : "' + notif + '"}'
+            # Extract messages
+            notif = stoveInfo[0].get('messages')
+            # Create meg with messages to send to app
+            toSend = '{"opcode" : "22", "messages" : "' + notif + '"}'
         except sqlite3.Error as e:
             if (self.__DEBUG):
-                toSend = '{"opcode" : "22", "notifications" : ""}'
+                toSend = '{"opcode" : "22", "messages" : ""}'
+                print ('\nDatabase Error %s:' % e.args[0])
+        # Return appropriate msg to send to app
+        return toSend
+
+    # When user presses the view messages button, this method
+    # gets messages from database and puts them into a string
+    # with the appropriate format to return to send to the app.
+    def getOnlyMessages(self, username):
+        # Retrieve stored messages for user from loginDB, table User_Login_Info 
+        mysql = """SELECT """ + """messages FROM User_Login_Info WHERE username = '""" + str(username) +"""'"""
+        try:
+            myresult = self.__cursor.execute(mysql).fetchall()
+            stoveInfo = [dict(i) for i in myresult]
+            # Extract messages
+            notif = stoveInfo[0].get('messages')
+            # Create msg with messages to send to app
+            toSend = '{"opcode" : "22", "messages" : "' + notif + '"}'
+        except sqlite3.Error as e:
+            if (self.__DEBUG):
+                toSend = '{"opcode" : "22", "messages" : ""}'
+                print ('\nDatabase Error %s:' % e.args[0])
+        # Return appropriate msg to send to app
+        return toSend
+
+    # When user presses "see who has added you" link, this method gets the usernames from database 
+    # that have added currently logged in user as a contact.
+    # Puts the usernames into a string with the appropriate format to return to send to the app.
+    def getWhoHasAddedUserAsContact(self, username):
+        # Retrieve usernames from loginDB, table User_Login_Info 
+        try:
+            # Added as Regular Contact
+            mysql1 = """SELECT """ + """username FROM User_Login_Info WHERE firstContact = '""" + str(username) + """' or secondContact = '""" + str(username) + """' or thirdContact = '""" + str(username) + """'"""
+            myresult1 = self.__cursor.execute(mysql1).fetchall()
+            stoveInfo1 = [dict(i) for i in myresult1]
+            # Extract usernames if any exist
+            usernames1 = "_"
+            for i in range(len(stoveInfo1)):
+                if i == 0:
+                    usernames1 = ""
+                # Make List of usernames to send back to app
+                usernames1 = usernames1 + stoveInfo1[i].get('username') + ","
+            
+            # Added as Physician Contact
+            mysql2 = """SELECT """ + """username FROM User_Login_Info WHERE physicianContact = '""" + str(username) + """'"""
+            myresult2 = self.__cursor.execute(mysql2).fetchall()
+            stoveInfo2 = [dict(i) for i in myresult2]
+            # Extract usernames if any exist
+            usernames2 = "_"
+            for i in range(len(stoveInfo2)):
+                if i == 0:
+                    usernames2 = ""
+                # Make List of usernames to send back to app
+                usernames2 = usernames2 + stoveInfo2[i].get('username') + ","
+            # Create msg with usernames to send to app
+            toSend = '{"opcode" : "25", "usernames" : "' + usernames1 + '", "physician" : "' + usernames2 + '"}'
+        except sqlite3.Error as e:
+            if (self.__DEBUG):
+                toSend = '{"opcode" : "25", "usernames" : "", "physician" : ""}'
                 print ('\nDatabase Error %s:' % e.args[0])
         # Return appropriate msg to send to app
         return toSend
@@ -646,55 +705,59 @@ def main():
             if (data.get('opcode') == "1"):
                 # When user presses login button
                 msg = dbServer.retrieveUserLoginInfo(data.get('username'))
-                dbServer. sendAppMsg(msg)
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "3"):
                 # When user presses register button
                 msg = dbServer.register(data.get('username'), data.get('password'), data.get('physician'))
-                dbServer. sendAppMsg(msg)
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "5"):
                 # When user wants to add regular contacts
-                msg = dbServer.addRegularContacts(data.get('currentUser'), data.get('contactOne'), data.get('contactTwo'), data.get('contactThree'))
-                dbServer. sendAppMsg(msg)
+                msg = dbServer.addRegularContacts(data.get('username'), data.get('contactOne'), data.get('contactTwo'), data.get('contactThree'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "6"):
                 # When user wants to add a physician contact
-                msg = dbServer.addPhysicianContact(data.get('currentUser'), data.get('physician'))
-                dbServer. sendAppMsg(msg)
+                msg = dbServer.addPhysicianContact(data.get('username'), data.get('physician'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "9"):
                 # When user wants to view the list of stove analysis tables 
                 # get the stove ID of the user and then get the stove analysis tables
                 # that associate with the stove ID.
                 stoveID = dbServer.retrieveStoveID(data.get('username'))
                 msg = dbServer.retrieveVideoList(stoveID)
-                dbServer. sendAppMsg(msg)
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "11"):
                 # When user wants to register or clear a stove
-                msg = dbServer.addStoveID(data.get('currentUser'), data.get('stoveID'))
-                dbServer. sendAppMsg(msg)
+                msg = dbServer.addStoveID(data.get('username'), data.get('stoveID'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "13"):
                 # If user wants to video currently registered stove.
-                msg = dbServer.getStoveID(data.get('currentUser'))
-                dbServer. sendAppMsg(msg)
+                msg = dbServer.getStoveID(data.get('username'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "15"):
                 # If user wants to view currently registered contacts
-                msg = dbServer.getContacts(data.get('currentUser'))
-                dbServer. sendAppMsg(msg)
+                msg = dbServer.getContacts(data.get('username'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "17"):
                 # If user wants to view data pertaining to a stove analysis table
                 msg = dbServer.retrieveAnalysisTableData("2", data.get('username'), data.get('tableName'))
-                dbServer. sendAppMsg(msg)
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "19"):
-                # If user or/and contact notifications have to be updated
-                dbServer.updateUserAndContactNotifications(data.get('username'), data.get('UserNotifications'), data.get('ContactNotifications'))
+                # If user or/and contact messages have to be updated
+                dbServer.updateUserAndContactMessages(data.get('username'), data.get('UserMessages'), data.get('ContactMessages'))
             if (data.get('opcode') == "20"):
-                # If user wants to clear their notifications
-                dbServer.clearNotifications(data.get('username'))
+                # If user wants to clear their messages
+                dbServer.clearMessages(data.get('username'))
             if (data.get('opcode') == "21"):
-                # If user wants to view their notifications
-                msg = dbServer.getNotifications(data.get('username'))
-                dbServer. sendAppMsg(msg)
+                # If user wants to view their messages
+                msg = dbServer.getMessages(data.get('username'))
+                dbServer.sendAppMsg(msg)
             if (data.get('opcode') == "23"):
-                # If user and physician contact notifications are to be updated
-                dbServer.updateUserAndPhysicianNotifications(data.get('username'), data.get('UserNotifications'), data.get('PhysicianNotifications'))
+                # If user and physician contact messages are to be updated
+                dbServer.updateUserAndPhysicianMessages(data.get('username'), data.get('UserMessages'), data.get('PhysicianMessages'))
+            if (data.get('opcode') == "24"):
+                # To get who has added current user as a contact
+                msg = dbServer.getWhoHasAddedUserAsContact(data.get('username'))
+                dbServer.sendAppMsg(msg)
 
     self.__soc_recv.shutdown(1)
     self.__soc_send.shutdown(1)
