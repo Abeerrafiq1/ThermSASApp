@@ -203,7 +203,7 @@ class DatabaseServer:
             stoveIDCount = count[0].get('COUNT(*)')
         except sqlite3.Error as e:
             if (self.__DEBUG):
-                stoveIDCount = 1 
+                stoveIDCount = 0
                 print ('\nDatabase Error %s:' % e.args[0])
         # Return number of occurrences of stoveID passed in
         return stoveIDCount 
