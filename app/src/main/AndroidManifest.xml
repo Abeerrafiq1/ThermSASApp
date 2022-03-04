@@ -28,12 +28,13 @@
         <activity android:name=".registerActivity"/>
         <activity android:name=".addContactsActivity"/>
         <activity android:name=".mainOptionsActivity"/>
-        <activity android:name=".notificationActivity"/>
+        <activity android:name=".messageActivity"/>
         <activity android:name=".viewStoveVideoListActivity"/>
         <activity android:name=".viewStoveVideoAnalysisActivity"/>
         <activity android:name=".addStoveActivity"/>
         <activity android:name=".logoutActivity"/>
         <activity android:name=".currentContactsActivity"/>
+        <activity android:name=".whoHasAddedUserAsContactActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

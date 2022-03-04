@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ import org.json.JSONObject;
  Purpose of Class: When the app logs into a user account, five main options are shown.
  For each option, this class directs the app to the associated view.
  The options are the following:
- -view notifications
+ -view messages
  -add/view stove#
  -view stove data
  -add contacts
@@ -30,8 +32,9 @@ public class mainOptionsActivity extends AppCompatActivity {
     private sender Sender;
     private String databaseServerAddr = "192.168.137.1";
     private static final int senderPort = 1000;
-    private Button addContacts, notification_button, stoveData_button, addStove_button, currentContacts, logout;
-    private String currentUser;
+    private Button addContacts, message_button, stoveData_button, addStove_button, currentContacts, logout;
+    private TextView helloTextView;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +44,26 @@ public class mainOptionsActivity extends AppCompatActivity {
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
-        currentUser = intent.getStringExtra("currentUser");
+        username = intent.getStringExtra("username");
 
         // Five buttons associated with the five main options
         addContacts = (Button) findViewById(R.id.addContactsButton);
-        notification_button = (Button) findViewById(R.id.view_Notifications);
+        message_button = (Button) findViewById(R.id.view_messages);
         stoveData_button = (Button) findViewById(R.id.view_stoveData);
         addStove_button = (Button) findViewById(R.id.addStoveBtn);
         currentContacts = (Button) findViewById(R.id.currentContacts);
         logout = (Button) findViewById(R.id.logout);
+        helloTextView = (TextView) findViewById(R.id.helloTextView);
 
-        // If user requests to view notifications, start the notificationActivity
-        notification_button.setOnClickListener(new View.OnClickListener() {
+        // Display username on main page
+        helloTextView.setText("Hello " + username + "!");
+
+        // If user requests to view messages, start the messageActivity
+        message_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mainOptionsActivity.this, notificationActivity.class);
-                intent.putExtra("currentUser", currentUser);
+                Intent intent = new Intent(mainOptionsActivity.this, messageActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -71,7 +78,7 @@ public class mainOptionsActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "15");
-                    userinfo.put("currentUser", currentUser);
+                    userinfo.put("username", username);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("AppDebug", "Error! " + e.toString());
@@ -80,7 +87,10 @@ public class mainOptionsActivity extends AppCompatActivity {
                 Sender.run(databaseServerAddr, userinfo.toString(), senderPort);
 
                 // Start Activity
-                startActivity(new Intent(mainOptionsActivity.this, currentContactsActivity.class));
+                // Start Activity
+                Intent intent = new Intent(mainOptionsActivity.this, currentContactsActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
             }
         });
 
@@ -94,7 +104,7 @@ public class mainOptionsActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "13");
-                    userinfo.put("currentUser", currentUser);
+                    userinfo.put("username", username);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("AppDebug", "Error! " + e.toString());
@@ -104,7 +114,7 @@ public class mainOptionsActivity extends AppCompatActivity {
 
                 // Start Activity
                 Intent intent = new Intent(mainOptionsActivity.this, addStoveActivity.class);
-                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -119,7 +129,7 @@ public class mainOptionsActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "9");
-                    userinfo.put("username", currentUser);
+                    userinfo.put("username", username);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("AppDebug", "Error! " + e.toString());
@@ -129,7 +139,7 @@ public class mainOptionsActivity extends AppCompatActivity {
 
                 // Start Activity
                 Intent intent = new Intent(mainOptionsActivity.this, viewStoveVideoListActivity.class);
-                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -139,7 +149,7 @@ public class mainOptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainOptionsActivity.this, addContactsActivity.class);
-                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -153,22 +163,22 @@ public class mainOptionsActivity extends AppCompatActivity {
             }
         });
 
-        // If user has a notification that needs immediate attention, show a pop up
+        // If user has a message that needs immediate attention, show a pop up
         // after 600ms of logging in
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                // If notification is about a contact's stove
+                // If message is about a contact's stove
                 if (intent.getStringExtra("onTooLong").equals("true-contact")) {
-                    String text = "A member has the stove on too long!\n Please check notifications!";
+                    String text = "A member has the stove on too long!\n Please check messages!";
 
                     Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);
                     startActivity(intent);
                 }
-                // If notification is about your stove
+                // If message is about your stove
                 else if (intent.getStringExtra("onTooLong").equals("true-owner")) {
-                    String text = "Your stove was on too long!\n Check stove and notifications!";
+                    String text = "Your stove was on too long!\n Check stove and messages!";
 
                     Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);

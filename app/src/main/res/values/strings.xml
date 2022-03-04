@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ThermSASApp</string>
+    <string name="app_name">The ThermSAS</string>
     <declare-styleable name = "TableView">
         <attr name ="columnCount" format = "integer"/>
         <attr name ="headerElevation" format = "integer"/>

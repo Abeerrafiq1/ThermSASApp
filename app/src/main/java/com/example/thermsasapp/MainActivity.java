@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     // Class variables
     private receiver Receiver;
     private Button login_button, register_button;
-    static ArrayList<String> notifications = new ArrayList<>();
+    static ArrayList<String> messages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

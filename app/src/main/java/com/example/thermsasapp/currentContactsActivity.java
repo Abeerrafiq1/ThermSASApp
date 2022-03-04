@@ -1,9 +1,12 @@
 package com.example.thermsasapp;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +19,17 @@ import org.json.JSONObject;
  @author: Abeer Rafiq
 
  Purpose of Class: To view currently added contacts (physician contacts and regular contacts).
+ Also has link to show which usernames have added the current user as a contact.
  */
 public class currentContactsActivity extends AppCompatActivity {
 
     // Class variables
     private Context mContext = this;
     private TextView physician, contact1, contact2, contact3;
+    private TextView whoHasAddedMe;
+    private sender Sender;
+    private String databaseServerAddr = "192.168.137.1";
+    private static final int senderPort = 1000;
     public static Handler exHandler;
 
     @Override
@@ -30,6 +38,10 @@ public class currentContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.current_contacts_activity);
 
+        // Get currently logged in username from previous view
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+        
         // TextViews to show the currently added contacts/physician
         physician = (TextView) findViewById(R.id.physicianEdit);
         contact1 = (TextView) findViewById(R.id.contact1Text);
@@ -43,15 +55,29 @@ public class currentContactsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(currentContactsActivity.this, detailPopUpActivity.class);
                 intent2.putExtra("height", "0.4");
-                intent2.putExtra("popupText", "\n\n\n\n\n\nABOUT CONTACTS: " +
+                intent2.putExtra("popupText", "\n\n\n\n\n\n\n\n\nABOUT CONTACTS: " +
                         "\n\n * These are contacts currently added to your account" +
-                        "\n * The primary contacts will receive notifications in the case of a stove emergency " +
-                        "\n * The physician contact will receive notifications about cooking trends " +
+                        "\n * The primary contacts will receive messages in the case of a stove emergency " +
+                        "\n * The physician contact will receive messages about cooking trends " +
                         "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
                 startActivity(intent2);
             }
         });
 
+        // Link to see which usernames have added the current user as a contact
+        whoHasAddedMe = (TextView) findViewById(R.id.whoAddedMe);
+        whoHasAddedMe.setPaintFlags(whoHasAddedMe.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        whoHasAddedMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start Activity
+                Intent intent = new Intent(currentContactsActivity.this, whoHasAddedUserAsContactActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            }
+        });
+        
+        
         // When database server sends a message with the currently stored contacts for user
         // update the TextViews
         exHandler = new Handler() {

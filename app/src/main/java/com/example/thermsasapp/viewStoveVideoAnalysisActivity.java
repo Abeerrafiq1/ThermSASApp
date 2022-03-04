@@ -43,7 +43,7 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("username");
+        String username = intent.getStringExtra("username");
 
         // Set headers of the table (7 columns)
         String[] titles = {" Time Elapsed", "Classification", "  Pan Area", "  Pan Temp", "Number Food", "       Food Area", "       Food Temp"};
@@ -97,7 +97,7 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                                     "["+object[0].getString("food_area")+"]", "["+object[0].getString("food_temp")+"]"};
                             analysisTable.add(item[0]);
 
-                            // If classification is determined to risky, set isOnTooLong to true to send corresponding notifications (last if statement of this code)
+                            // If classification is determined to risky, set isOnTooLong to true to send corresponding messages (last if statement of this code)
                             if (object[0].getString("classification").equals("on too long")){
                                 isOnTooLong = true;
                             }
@@ -112,7 +112,7 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                     simple.setPaddings(100, 15, 20, 15);
                     tb_v.setDataAdapter(simple);
 
-                    // If classification is determined to risky, show pop up and update corresponding notifications
+                    // If classification is determined to risky, show pop up and update corresponding messages
                     if (isOnTooLong){
                         // Show a pop up to alert user of risk
                         String text = "The stove has        been on too long! \n Please check       on it!";
@@ -120,26 +120,26 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                         intent.putExtra("popupText", text);
                         startActivity(intent);
 
-                        //Create a copy of the notifications ArrayList
-                        ArrayList<String> copyNotifications = new ArrayList<>();
-                        copyNotifications.add(MainActivity.notifications.get(0));
+                        //Create a copy of the messages ArrayList
+                        ArrayList<String> copyMessages = new ArrayList<>();
+                        copyMessages.add(MainActivity.messages.get(0));
 
-                        // Create notifications and update notifications in ArrayList
-                        MainActivity.notifications.clear();
+                        // Create messages and update messages in ArrayList
+                        MainActivity.messages.clear();
                         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String formattedTimeStamp = sdf3.format(timestamp);
-                        String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\nYour stove was on too long!\nNotifications have been sent to your contacts\n\n-----------------------------------------";
-                        String contactNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has the stove on too long! Please make sure everything is okay\n\n-----------------------------------------";
-                        MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                        String usersMessage = "\n\n [" + formattedTimeStamp + "]\n\nYour stove was on too long!\nMessages have been sent to your contacts\n\n-----------------------------------------";
+                        String contactMessage = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + username + " * has the stove on too long! Please make sure everything is okay\n\n-----------------------------------------";
+                        MainActivity.messages.add(0, copyMessages.get(0).toString() + usersMessage);
 
-                        // Send database server message to update notifications of user and contacts in the database server
+                        // Send database server message to update messages of user and contacts in the database server
                         JSONObject userinfo = new JSONObject();
                         try {
                             userinfo.put("opcode", "19");
-                            userinfo.put("username", currentUser);
-                            userinfo.put("UserNotifications", usersNotification);
-                            userinfo.put("ContactNotifications", contactNotification);
+                            userinfo.put("username", username);
+                            userinfo.put("UserMessages", usersMessage);
+                            userinfo.put("ContactMessages", contactMessage);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("AppDebug", "Error! " + e.toString());

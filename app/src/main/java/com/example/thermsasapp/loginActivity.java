@@ -65,7 +65,7 @@ public class loginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(loginActivity.this, detailPopUpActivity.class);
                 intent2.putExtra("height", "0.3");
-                intent2.putExtra("popupText", "\n\n\n\n\n\n\n\nABOUT LOGIN: " +
+                intent2.putExtra("popupText", "\n\n\n\n\n\n\n\n\n\n\nABOUT LOGIN: " +
                         "\n\n * Username and password are both case sensitive" +
                         "\n * Do not add extra spaces" +
                         "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
@@ -80,10 +80,10 @@ public class loginActivity extends AppCompatActivity {
             public void handleMessage(Message dbpassword) {
                 super.handleMessage(dbpassword);
                 try {
-                    // Extract password and notifications from received message
+                    // Extract password and messages from received message
                     JSONObject obj = new JSONObject((String) dbpassword.obj);
                     String password = obj.getString("password");
-                    String notifications = obj.getString("notifications");
+                    String messages = obj.getString("messages");
                     String onTooLongNotif = "false";
 
                     // If the password matches the user entered password, let user login, otherwise show on app incorrect credentials
@@ -91,20 +91,20 @@ public class loginActivity extends AppCompatActivity {
                         // Show authenticated
                         Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
 
-                        // Update user's notifications
-                        MainActivity.notifications.clear();
-                        MainActivity.notifications.add(0, notifications);
+                        // Update user's messages
+                        MainActivity.messages.clear();
+                        MainActivity.messages.add(0, messages);
 
-                        // If there is a notification that needs immediate attention, the next view (main options page) must show a pop up
-                        if (notifications.contains("has the stove on too long! Please make sure everything is okay")){
+                        // If there is a message that needs immediate attention, the next view (main options page) must show a pop up
+                        if (messages.contains("has the stove on too long! Please make sure everything is okay")){
                             onTooLongNotif = "true-contact";
-                        } else if (notifications.contains("Your stove was on too long!")){
+                        } else if (messages.contains("Your stove was on too long!")){
                             onTooLongNotif = "true-owner";
                         }
 
                         // Start mainOptionsActivity to give five options
                         Intent intent = new Intent(loginActivity.this, mainOptionsActivity.class);
-                        intent.putExtra("currentUser", editTextUsername.getText().toString());
+                        intent.putExtra("username", editTextUsername.getText().toString());
                         intent.putExtra("onTooLong", onTooLongNotif);
                         // Clear editTexts so if you go back from main options activity, credentials have to be re-entered
                         editTextUsername.setText("");

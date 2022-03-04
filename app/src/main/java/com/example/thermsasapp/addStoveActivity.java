@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
  Purpose of Class: To show the currently registered stove ID and to remove/add a stove ID.
  The stove ID associates with the stove that the thermal camera is monitering and collecting data for.
- Once the stove ID is added or cleared, the notifications will be updated.
+ Once the stove ID is added or cleared, the messages will be updated.
  */
 public class addStoveActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class addStoveActivity extends AppCompatActivity {
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("currentUser");
+        String username = intent.getStringExtra("username");
 
         // EditText to enter a stove ID to register stove
         stoveID_editText = (EditText) findViewById(R.id.enterStoveID);
@@ -58,7 +58,7 @@ public class addStoveActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "11");
-                    userinfo.put("currentUser", currentUser);
+                    userinfo.put("username", username);
                     userinfo.put("stoveID", stoveID_editText.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -76,7 +76,7 @@ public class addStoveActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(addStoveActivity.this, detailPopUpActivity.class);
                 intent2.putExtra("height", "0.55");
-                intent2.putExtra("popupText", "\n\n\nREGISTRATION OF STOVE: " +
+                intent2.putExtra("popupText", "\n\n\n\n\n\n\nREGISTRATION OF STOVE: " +
                         "\n\n * Enter ID corresponding to stove that the thermal camera monitors " +
                         "\n * The stove ID must not be registered already " +
                         "\n * ID is used to view stove analysis data corresponding to stove ID " +
@@ -89,7 +89,7 @@ public class addStoveActivity extends AppCompatActivity {
 
         // Opcode 12:
         // When database server sends a message for successful/unsuccessful registration, take appropriate action
-        // If stove ID cleared or registered, update notifications
+        // If stove ID cleared or registered, update messages
         // Opcode 14:
         // When database server sends the currently registered stove, display it in the view (updateText Textview)
         exHandler = new Handler() {
@@ -103,8 +103,8 @@ public class addStoveActivity extends AppCompatActivity {
                     // Extract opcode from received message and initialize variables
                     JSONObject obj = new JSONObject((String) msg.obj);
                     String opcode = obj.getString("opcode");
-                    String notification =  "";
-                    Boolean updateNotifications = false;
+                    String message =  "";
+                    Boolean updateMessages = false;
 
 
                     // If opcode = 12, the database server has sent a response for successful/unsuccessful stove registration
@@ -112,19 +112,19 @@ public class addStoveActivity extends AppCompatActivity {
                         String validity = obj.getString("validity");
                         String maxStoveID = obj.getString("maxStoveID");
 
-                        // If successful registration, update textView; should update notifications
+                        // If successful registration, update textView; should update messages
                         if (validity.equals("yes")) {
                             Toast.makeText(mContext, "Stove registered successfully!", Toast.LENGTH_SHORT).show();
                             updateText.setText(stoveID_editText.getText().toString());
-                            updateNotifications = true;
-                            notification = "Stove with ID " + stoveID_editText.getText().toString() + " has been registered successfully!";
+                            updateMessages = true;
+                            message = "Stove with ID " + stoveID_editText.getText().toString() + " has been registered successfully!";
                         }
-                        // If successfully cleared stove ID, update textView; should update notifications
+                        // If successfully cleared stove ID, update textView; should update messages
                         else if (validity.equals("empty")){
                             Toast.makeText(mContext, "Stove Entry Cleared", Toast.LENGTH_SHORT).show();
                             updateText.setText("None");
-                            updateNotifications = true;
-                            notification = "Your stove has been unregistered";
+                            updateMessages = true;
+                            message = "Your stove has been unregistered";
                         }
                         // If stove ID already registered, suggest a new stove ID that can be registered
                         else
@@ -143,28 +143,28 @@ public class addStoveActivity extends AppCompatActivity {
                         }
                     }
 
-                    // If stove ID is registered or cleared, add associating message to notifications
-                    if (updateNotifications){
-                        ArrayList<String> copyNotifications = new ArrayList<>();
-                        copyNotifications.add(MainActivity.notifications.get(0));
-                        MainActivity.notifications.clear();
+                    // If stove ID is registered or cleared, add associating message to messages
+                    if (updateMessages){
+                        ArrayList<String> copyMessages = new ArrayList<>();
+                        copyMessages.add(MainActivity.messages.get(0));
+                        MainActivity.messages.clear();
 
-                        // Create notification with timestamp
+                        // Create message with timestamp
                         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String formattedTimeStamp = sdf3.format(timestamp);
-                        String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\n" + notification + "\n\n-----------------------------------------";
+                        String usersMessage = "\n\n [" + formattedTimeStamp + "]\n\n" + message + "\n\n-----------------------------------------";
 
-                        // Update notifications array list
-                        MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                        // Update messages array list
+                        MainActivity.messages.add(0, copyMessages.get(0).toString() + usersMessage);
 
-                        // Update notifications in database by sending request to database server
+                        // Update messages in database by sending request to database server
                         JSONObject userinfo = new JSONObject();
                         try {
                             userinfo.put("opcode", "19");
-                            userinfo.put("username", currentUser);
-                            userinfo.put("UserNotifications", usersNotification);
-                            userinfo.put("ContactNotifications", "");
+                            userinfo.put("username", username);
+                            userinfo.put("UserMessages", usersMessage);
+                            userinfo.put("ContactMessages", "");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("AppDebug", "Error! " + e.toString());

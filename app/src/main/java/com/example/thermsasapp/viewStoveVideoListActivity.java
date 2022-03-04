@@ -46,7 +46,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("currentUser");
+        String username = intent.getStringExtra("username");
 
         // Set headers of the table (2 columns)
         String[] titles = {"   ID", "               TABLE NAME"};
@@ -153,7 +153,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                                     JSONObject userinfo = new JSONObject();
                                     try {
                                         userinfo.put("opcode", "17");
-                                        userinfo.put("username", currentUser);
+                                        userinfo.put("username", username);
                                         userinfo.put("tableName", tableNmToLookup);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -164,7 +164,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
 
                                     // Start the viewStoveVideoAnalysisActivity
                                     Intent intent = new Intent(viewStoveVideoListActivity.this, viewStoveVideoAnalysisActivity.class);
-                                    intent.putExtra("username", currentUser);
+                                    intent.putExtra("username", username);
                                     startActivity(intent);
                                 }
                                 // If table id entered is invalid (no such table exists), then show corresponding message
@@ -182,7 +182,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             Intent intent2 = new Intent(viewStoveVideoListActivity.this, detailPopUpActivity.class);
                             intent2.putExtra("height", "0.60");
-                            intent2.putExtra("popupText", "\n\nABOUT STOVE ANALYSIS TABLES: " +
+                            intent2.putExtra("popupText", "\n\n\n\n\n\n\nABOUT STOVE ANALYSIS TABLES: " +
                                     "\n\n * Each analysis table corresponds to a recorded stove video" +
                                     "\n * If no stove is registered, this list will remain empty " +
                                     "\n * If no recorded videos for registered stove, list will be empty " +

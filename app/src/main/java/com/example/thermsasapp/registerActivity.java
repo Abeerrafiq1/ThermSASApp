@@ -79,8 +79,8 @@ public class registerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(registerActivity.this, detailPopUpActivity.class);
                 intent2.putExtra("height", "0.4");
-                intent2.putExtra("popupText", "\n\n\n\n\n\nABOUT REGISTRATION: " +
-                        "\n\n * You must enter a username that doesn't already exist" +
+                intent2.putExtra("popupText", "\n\n\n\n\n\n\n\n\n\nABOUT REGISTRATION: " +
+                        "\n\n * You must enter a username that doesn't already exist and that isn't blank" +
                         "\n * You will be re-directed to login page after registration" +
                         "\n * If you are a licensed physician, then click on the check box" +
                         "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");

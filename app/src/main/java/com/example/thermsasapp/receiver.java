@@ -1,4 +1,5 @@
 package com.example.thermsasapp;
+import android.content.Intent;
 import android.util.Log;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -115,10 +116,16 @@ class receiver extends Thread {
                         viewStoveVideoAnalysisActivity.exHandler.sendMessage(viewStoveVideoAnalysisActivity.exHandler.obtainMessage(1, message));
                         break;
                     case "22":
-                        // Send received message to notificationActivity
+                        // Send received message to messageActivity
                         sender.run(databaseServerAddr, ack.toString(), senderPort);
                         Thread.sleep(1000);
-                        notificationActivity.exHandler.sendMessage(notificationActivity.exHandler.obtainMessage(1, message));
+                        messageActivity.exHandler.sendMessage(messageActivity.exHandler.obtainMessage(1, message));
+                        break;
+                    case "25":
+                        // Send received message to currentContactsActivity
+                        sender.run(databaseServerAddr, ack.toString(), senderPort);
+                        Thread.sleep(1000);
+                        whoHasAddedUserAsContactActivity.exHandler.sendMessage(whoHasAddedUserAsContactActivity.exHandler.obtainMessage(1, message));
                         break;
                 }
             }

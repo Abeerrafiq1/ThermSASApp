@@ -20,9 +20,9 @@ import java.util.ArrayList;
  @author: Abeer Rafiq
 
  Purpose of Class: To add contacts such as relatives, friends or a physcician to stove owner's account.
- The contacts that are not a physician will receive notifications about the stove owner's account.
- All contacts will receive notifications once they have been added to the stove owner's account.
- The stove owner will receive a notification that the contacts have been updated.
+ The contacts that are not a physician will receive messages about the stove owner's account.
+ All contacts will receive messages once they have been added to the stove owner's account.
+ The stove owner will receive a message that the contacts have been updated.
  */
 public class addContactsActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class addContactsActivity extends AppCompatActivity {
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("currentUser");
+        String username = intent.getStringExtra("username");
 
         // EditText to enter one physician
         physician_editText = (EditText) findViewById(R.id.physicianText);
@@ -62,7 +62,7 @@ public class addContactsActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "5");
-                    userinfo.put("currentUser", currentUser);
+                    userinfo.put("username", username);
                     userinfo.put("contactOne", contactOne_editText.getText().toString());
                     userinfo.put("contactTwo", contactTwo_editText.getText().toString());
                     userinfo.put("contactThree", contactThree_editText.getText().toString());
@@ -82,7 +82,7 @@ public class addContactsActivity extends AppCompatActivity {
                 JSONObject userinfo = new JSONObject();
                 try {
                     userinfo.put("opcode", "6");
-                    userinfo.put("currentUser", currentUser);
+                    userinfo.put("username", username);
                     userinfo.put("physician", physician_editText.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -99,18 +99,16 @@ public class addContactsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(addContactsActivity.this, detailPopUpActivity.class);
-                intent2.putExtra("height", "0.7");
-                intent2.putExtra("popupText", "PHYSICIAN CONTACTS: " +
-                        "\n * To register a physician, enter a username that is already registered as a physician (it can not be yourself)" +
-                        "\n * To clear a physician, leave field empty" +
-                        "\n * Then, press ADD PHYSICIAN button" +
+                intent2.putExtra("height", "0.85");
+                intent2.putExtra("popupText", "\n\nAfter adding a contact, contact is notified that they are added to your account\n\nPHYSICIAN CONTACTS: " +
+                        "\n * To register a physician, enter username that is registered as a physician (can't be yourself)" +
+                        "\n * To clear a physician, leave field empty and press ADD PHYSICIAN button" +
+                        "\n * The physician contact will receive messages about cooking trends " +
                         "\n\n PRIMARY CONTACTS " +
-                        "\n * Only three contacts allowed per account" +
-                        "\n * Each time three contacts are added, previous ones are cleared" +
-                        "\n * To register a primary contact, enter a username that is already registered (it can not be yourself) " +
-                        "\n * Primary contacts can't be repeated but can be left empty " +
-                        "\n * To clear all primary contacts, leave all primary contact fields empty" +
-                        "\n * Then, press ADD PRIMARY CONTACTS" +
+                        "\n * Only three contacts allowed per account, primary contacts can't be repeated, contacts must be registered, can't register yourself and each time three contacts are added, previous ones are cleared" +
+                        "\n * Primary contacts can be left empty " +
+                        "\n * Primary contacts receive messages in the case of a stove emergency  " +
+                        "\n * To clear all primary contacts, leave all primary contact fields empty and press ADD PRIMARY CONTACTS button" +
                         "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
                 startActivity(intent2);
             }
@@ -118,10 +116,10 @@ public class addContactsActivity extends AppCompatActivity {
 
         // Opcode 7:
         // When database server sends a message for successful/unsuccessful contact registration
-        // If contacts determined to be successfully added, send notification to stove owner and those contacts
+        // If contacts determined to be successfully added, send message to stove owner and those contacts
         // Opcode 8:
         // When database server sends a message for successful/unsuccessful physician registration
-        // If physician determined to be successfully added, send notification to stove owner and the physician
+        // If physician determined to be successfully added, send message to stove owner and the physician
         exHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -156,7 +154,7 @@ public class addContactsActivity extends AppCompatActivity {
                         else if (contactOne.equals("5") && contactTwo.equals("5") && contactThree.equals("5")){
                             Toast.makeText(mContext, "All contacts cleared.", Toast.LENGTH_SHORT).show();
                         }
-                        // Successfully added contacts; should update notifications
+                        // Successfully added contacts; should update messages
                         else if (contactOne.equals("4") && contactTwo.equals("4") && contactThree.equals("4")){
                             Toast.makeText(mContext, "Contacts added successfully.", Toast.LENGTH_SHORT).show();
                             sendContactNotif = true;
@@ -183,51 +181,51 @@ public class addContactsActivity extends AppCompatActivity {
                         else if(physician.equals("5")){
                             Toast.makeText(mContext, "Physician cleared.", Toast.LENGTH_SHORT).show();
                         }
-                        // Successfully added physician; should update notifications
+                        // Successfully added physician; should update messages
                         else if (physician.equals("4")){
                             Toast.makeText(mContext, "Physician added successfully.", Toast.LENGTH_SHORT).show();
                             sendPhysicianNotif = true;
                         }
                     }
 
-                    // To update notifications of stove owner when contacts or a physician has been successfully added
-                    // To update notifications of contacts or physician when they have been added to stove owner's account
+                    // To update messages of stove owner when contacts or a physician has been successfully added
+                    // To update messages of contacts or physician when they have been added to stove owner's account
                     if (sendContactNotif || sendPhysicianNotif) {
-                        ArrayList<String> copyNotifications = new ArrayList<>();
-                        copyNotifications.add(MainActivity.notifications.get(0));
-                        MainActivity.notifications.clear();
+                        ArrayList<String> copyMessages = new ArrayList<>();
+                        copyMessages.add(MainActivity.messages.get(0));
+                        MainActivity.messages.clear();
 
-                        // Create notification with timestamp
+                        // Create message with timestamp
                         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String formattedTimeStamp = sdf3.format(timestamp);
-                        String usersNotification = "\n\n [" + formattedTimeStamp + "]\n\nContacts have been updated and notified\n\n-----------------------------------------";
+                        String usersMessage = "\n\n [" + formattedTimeStamp + "]\n\nContacts have been updated and notified\n\n-----------------------------------------";
 
-                        // Send database request to update notification of stove owner (in database and notifications arraylist) and contacts
+                        // Send database request to update message of stove owner (in database and messages arraylist) and contacts
                         JSONObject userinfo = new JSONObject();
                         if (sendContactNotif) {
-                            String contactNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has added you as a contact!\n\n-----------------------------------------";
-                            MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                            String contactMessage = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + username + " * has added you as a contact!\n\n-----------------------------------------";
+                            MainActivity.messages.add(0, copyMessages.get(0).toString() + usersMessage);
                             try {
                                 userinfo.put("opcode", "19");
-                                userinfo.put("username", currentUser);
-                                userinfo.put("UserNotifications", usersNotification);
-                                userinfo.put("ContactNotifications", contactNotification);
+                                userinfo.put("username", username);
+                                userinfo.put("UserMessages", usersMessage);
+                                userinfo.put("ContactMessages", contactMessage);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.d("AppDebug", "Error! " + e.toString());
                             }
                         }
 
-                        // Send database request to update notification of stove owner (in database and notifications arraylist) and physician
+                        // Send database request to update message of stove owner (in database and messages arraylist) and physician
                         if (sendPhysicianNotif) {
-                            String physicianNotification = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + currentUser + " * has added you as a physician contact!\n\n-----------------------------------------";
-                            MainActivity.notifications.add(0, copyNotifications.get(0).toString() + usersNotification);
+                            String physicianMessage = "\n\n [" + formattedTimeStamp + "]\n\nStove owner with username * " + username + " * has added you as a physician contact!\n\n-----------------------------------------";
+                            MainActivity.messages.add(0, copyMessages.get(0).toString() + usersMessage);
                             try {
                                 userinfo.put("opcode", "23");
-                                userinfo.put("username", currentUser);
-                                userinfo.put("UserNotifications", usersNotification);
-                                userinfo.put("PhysicianNotifications", physicianNotification);
+                                userinfo.put("username", username);
+                                userinfo.put("UserMessages", usersMessage);
+                                userinfo.put("PhysicianMessages", physicianMessage);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.d("AppDebug", "Error! " + e.toString());
