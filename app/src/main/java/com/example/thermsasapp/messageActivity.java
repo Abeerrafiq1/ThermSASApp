@@ -7,7 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +18,8 @@ import org.json.JSONObject;
  @author: Abeer Rafiq
 
  Purpose of Class: When user presses the view messages button, this class retrieves the messages by
- sending a request to the database server. Then it displays the updated messages.
+ sending a request to the database server. Then it displays the updated messages. Users can clear notifications.
+ They can also stop and start pop ups/phone notifications.
  */
 public class messageActivity extends AppCompatActivity {
 
@@ -28,10 +29,13 @@ public class messageActivity extends AppCompatActivity {
     private static final int senderPort = 1000;
     private Context mContext = this;
     public static Handler exHandler;
+    public static Button stopPopUp_button;
+    public static Button startPopUp_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.message_activity);
 
         // Get currently logged in username from previous view
         Intent intent = getIntent();
@@ -64,6 +68,30 @@ public class messageActivity extends AppCompatActivity {
                     String notif = obj.getString("messages");
                     MainActivity.messages.clear();
                     MainActivity.messages.add(notif);
+
+                    // Ensure stop and start buttons are initialized
+                    messageActivity.stopPopUp_button= (Button) findViewById(R.id.stopPopUps);
+                    messageActivity.startPopUp_button = (Button) findViewById((R.id.startPopUps));
+
+                    // If stop button pressed, stop displaying pop ups that are handled by a exhandler in loginActivity
+                    // Therefore set stopPopUps to true in loginActivity
+                    messageActivity.stopPopUp_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "Stopped Pop Ups/Notifications", Toast.LENGTH_SHORT).show();
+                            loginActivity.stopPopUps = "true";
+                        }
+                    });
+
+                    // If start button pressed, start displaying pop ups that are handled by a exhandler in loginActivity
+                    // Therefore set stopPopUps to false in loginActivity
+                    messageActivity.startPopUp_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "Stopped Pop Ups/Notifications", Toast.LENGTH_SHORT).show();
+                            loginActivity.stopPopUps = "false";
+                        }
+                    });
 
                     // Update messages in app's view through the recycler view (it can scroll vertically)
                     RecyclerView recyclerV = (RecyclerView) findViewById(R.id.recyclerV);

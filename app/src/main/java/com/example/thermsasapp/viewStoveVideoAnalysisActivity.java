@@ -112,14 +112,8 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                     simple.setPaddings(100, 15, 20, 15);
                     tb_v.setDataAdapter(simple);
 
-                    // If classification is determined to risky, show pop up and update corresponding messages
+                    // If classification is determined to risky, update notifications
                     if (isOnTooLong){
-                        // Show a pop up to alert user of risk
-                        String text = "The stove has        been on too long! \n Please check       on it!";
-                        Intent intent = new Intent(viewStoveVideoAnalysisActivity.this, alertPopUpActivity.class);
-                        intent.putExtra("popupText", text);
-                        startActivity(intent);
-
                         //Create a copy of the messages ArrayList
                         ArrayList<String> copyMessages = new ArrayList<>();
                         copyMessages.add(MainActivity.messages.get(0));

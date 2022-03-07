@@ -21,7 +21,7 @@ import java.util.ArrayList;
  @author: Abeer Rafiq
 
  Purpose of Class: To show the currently registered stove ID and to remove/add a stove ID.
- The stove ID associates with the stove that the thermal camera is monitering and collecting data for.
+ The stove ID associates with the stove that the thermal camera is monitoring and collecting data for.
  Once the stove ID is added or cleared, the messages will be updated.
  */
 public class addStoveActivity extends AppCompatActivity {
@@ -105,7 +105,6 @@ public class addStoveActivity extends AppCompatActivity {
                     String opcode = obj.getString("opcode");
                     String message =  "";
                     Boolean updateMessages = false;
-
 
                     // If opcode = 12, the database server has sent a response for successful/unsuccessful stove registration
                     if (opcode.equals("12")) {

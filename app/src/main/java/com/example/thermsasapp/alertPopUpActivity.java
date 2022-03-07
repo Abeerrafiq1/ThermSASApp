@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 /**
  @author: Abeer Rafiq
-
  Purpose of Class: To display a pop up on the app and alert users
  of events that need immediate action.
  */
@@ -19,12 +18,12 @@ public class alertPopUpActivity extends Activity {
     private TextView stoveID_editText;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         // Set app view
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alert_pop_window_activity);
 
-        // Get currently logged in username from previous view
+        // Get text to show on pop up
         Intent intent = getIntent();
         String popTxt = intent.getStringExtra("popupText");
 
@@ -33,11 +32,11 @@ public class alertPopUpActivity extends Activity {
         stoveID_editText.setText(popTxt);
 
         // To format the pop up view
-        DisplayMetrics dm  = new DisplayMetrics();
+        DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        getWindow().setLayout((int)(width*.9), (int)(height*.5));
+        getWindow().setLayout((int) (width * .9), (int) (height * .5));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
         params.x = 0;

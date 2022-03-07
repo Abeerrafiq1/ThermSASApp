@@ -124,7 +124,8 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                             // registered stove or stove isn't registered yet
                             if (finalVideoList.equals("") ){
                                 Toast.makeText(mContext, "Sorry no stove registered", Toast.LENGTH_SHORT).show();
-                            } else if (finalVideoList.equals("[]")) {
+                            }
+                            else if (finalVideoList.equals("[]")) {
                                 Toast.makeText(mContext, "Sorry no videos recorded on registered stove", Toast.LENGTH_SHORT).show();
                             }
                             // There are stove video tables associated with stove registered

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  @author: Abeer Rafiq
 
- Purpose of Class: To add contacts such as relatives, friends or a physcician to stove owner's account.
+ Purpose of Class: To add contacts such as relatives, friends or a physician to stove owner's account.
  The contacts that are not a physician will receive messages about the stove owner's account.
  All contacts will receive messages once they have been added to the stove owner's account.
  The stove owner will receive a message that the contacts have been updated.

@@ -1,13 +1,12 @@
 package com.example.thermsasapp;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,9 +31,11 @@ public class mainOptionsActivity extends AppCompatActivity {
     private sender Sender;
     private String databaseServerAddr = "192.168.137.1";
     private static final int senderPort = 1000;
-    private Button addContacts, message_button, stoveData_button, addStove_button, currentContacts, logout;
+    private Button addContacts, message_button, stoveData_button, addStove_button, currentContacts;
     private TextView helloTextView;
     private String username;
+    public static Handler exHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,6 @@ public class mainOptionsActivity extends AppCompatActivity {
         stoveData_button = (Button) findViewById(R.id.view_stoveData);
         addStove_button = (Button) findViewById(R.id.addStoveBtn);
         currentContacts = (Button) findViewById(R.id.currentContacts);
-        logout = (Button) findViewById(R.id.logout);
         helloTextView = (TextView) findViewById(R.id.helloTextView);
 
         // Display username on main page
@@ -153,38 +153,5 @@ public class mainOptionsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // If user requests to log out, start the MainActivity
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mainOptionsActivity.this, logoutActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // If user has a message that needs immediate attention, show a pop up
-        // after 600ms of logging in
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // If message is about a contact's stove
-                if (intent.getStringExtra("onTooLong").equals("true-contact")) {
-                    String text = "A member has the stove on too long!\n Please check messages!";
-
-                    Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
-                    intent.putExtra("popupText", text);
-                    startActivity(intent);
-                }
-                // If message is about your stove
-                else if (intent.getStringExtra("onTooLong").equals("true-owner")) {
-                    String text = "Your stove was on too long!\n Check stove and messages!";
-
-                    Intent intent = new Intent(mainOptionsActivity.this, alertPopUpActivity.class);
-                    intent.putExtra("popupText", text);
-                    startActivity(intent);
-                }
-            }
-        }, 700);
     }
 }

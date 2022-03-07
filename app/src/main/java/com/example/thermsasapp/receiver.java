@@ -1,5 +1,4 @@
 package com.example.thermsasapp;
-import android.content.Intent;
 import android.util.Log;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -122,7 +121,7 @@ class receiver extends Thread {
                         messageActivity.exHandler.sendMessage(messageActivity.exHandler.obtainMessage(1, message));
                         break;
                     case "25":
-                        // Send received message to currentContactsActivity
+                        // Send received message to whoHasAddedUserAsContactActivity
                         sender.run(databaseServerAddr, ack.toString(), senderPort);
                         Thread.sleep(1000);
                         whoHasAddedUserAsContactActivity.exHandler.sendMessage(whoHasAddedUserAsContactActivity.exHandler.obtainMessage(1, message));

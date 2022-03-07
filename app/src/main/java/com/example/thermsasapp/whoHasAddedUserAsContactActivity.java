@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
 /**
  @author: Abeer Rafiq
 
- Purpose of Class: To show which usernames have added the current user as a primary contact or a physician contact.
+ Purpose of Class: To show which usernames have added the stove owner as a contact or a physician.
+ Gives the stove owner an idea of which users they might receive stove notifications about.
  */
 public class whoHasAddedUserAsContactActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class whoHasAddedUserAsContactActivity extends AppCompatActivity {
     private Context mContext = this;
     public static Handler exHandler;
     private TextView info;
+
     // Array list to store usernames that have added current user as contact
     static ArrayList<String> usernames = new ArrayList<>();
 
@@ -73,6 +75,7 @@ public class whoHasAddedUserAsContactActivity extends AppCompatActivity {
                             usernames.add(" - " + usernamesArray1[i]);
                         }
                     }
+
                     // Extract usernames that have added current user as physician contact from received message and update them in arraylist
                     String usernamesFromDB2 = obj.getString("physician");
                     String[] usernamesArray2 = {""};
@@ -94,7 +97,7 @@ public class whoHasAddedUserAsContactActivity extends AppCompatActivity {
                         usernames.add(" - None ");
                     }
 
-                    // If more than 6 items, view is scrollable so show corresponding text
+                    // If more than 6 items, show view is scrollable
                     if (usernames.size() > 6) {
                         info = (TextView) findViewById(R.id.scrollText);
                         info.setText("(List can be scrolled)");

@@ -81,21 +81,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addContactsButton" />
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="94dp"
-        android:layout_height="43dp"
-        android:backgroundTint="#D2C5EA"
-        android:text="Log out"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.962" />
-
     <TextView
         android:id="@+id/helloTextView"
         android:layout_width="wrap_content"

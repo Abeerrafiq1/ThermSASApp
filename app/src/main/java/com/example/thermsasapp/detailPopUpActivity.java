@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 /**
  @author: Abeer Rafiq
-
- Purpose of Class: To display a pop up on the app show details
+ Purpose of Class: To display a pop up on the app to show details
  for a specific app feature.
  */
 public class detailPopUpActivity extends Activity {
@@ -24,7 +23,7 @@ public class detailPopUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_pop_window_activity);
 
-        // Get currently logged in username from previous view
+        // Get text to show on pop up and height of pop up
         Intent intent = getIntent();
         String popTxt = intent.getStringExtra("popupText");
         String popHeight = intent.getStringExtra("height");

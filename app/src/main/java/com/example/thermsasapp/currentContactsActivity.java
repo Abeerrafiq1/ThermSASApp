@@ -5,8 +5,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +25,6 @@ public class currentContactsActivity extends AppCompatActivity {
     private Context mContext = this;
     private TextView physician, contact1, contact2, contact3;
     private TextView whoHasAddedMe;
-    private sender Sender;
-    private String databaseServerAddr = "192.168.137.1";
-    private static final int senderPort = 1000;
     public static Handler exHandler;
 
     @Override
@@ -76,7 +71,6 @@ public class currentContactsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        
         
         // When database server sends a message with the currently stored contacts for user
         // update the TextViews

@@ -7,7 +7,7 @@
     android:background="@color/white">
 
     <!-- @author: Abeer Rafiq
-     Corresponds to notificationActivity
+     Corresponds to messageActivity
     -->
 
     <Button
@@ -30,19 +30,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="Notifications"
+        android:text="Messages"
         android:textColor="#020202"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.604" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerV"
         android:layout_width="315dp"
-        android:layout_height="316dp"
+        android:layout_height="281dp"
         android:layout_marginTop="28dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,15 +57,50 @@
         android:id="@+id/clearNotif"
         android:layout_width="235dp"
         android:layout_height="55dp"
-        android:layout_below="@+id/recylerV"
+        android:layout_below="@+id/recyclerV"
         android:layout_alignParentEnd="true"
         android:backgroundTint="#D2C5EA"
-        android:text="Clear Notifications"
+        android:text="Clear Messages"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.816" />
+        app:layout_constraintVertical_bias="0.75" />
+
+    <Button
+        android:id="@+id/startPopUps"
+        android:layout_width="151dp"
+        android:layout_height="58dp"
+        android:layout_below="@+id/recyclerV"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="#D2C5EA"
+        android:text="Start Pop Ups/Notifications"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.876"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.867" />
+
+    <Button
+        android:id="@+id/stopPopUps"
+        android:layout_width="152dp"
+        android:layout_height="58dp"
+        android:layout_below="@+id/recyclerV"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="#D2C5EA"
+        android:text="Stop Pop Ups/Notifications"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.867" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

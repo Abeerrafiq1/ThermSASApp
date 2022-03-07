@@ -18,8 +18,21 @@ public class MainActivity extends AppCompatActivity {
 
     // Class variables
     private receiver Receiver;
+    public static receiverMessages recMsgs;
     private Button login_button, register_button;
     static ArrayList<String> messages = new ArrayList<>();
+
+    // When a user goes back from the loginActivity, they go to this MainActivity
+    // Make sure receiverMessages (to retrieve user messages) is properly initialized
+    protected void onRestart() {
+        super.onRestart();
+        // Initialize a receiver to receive messages
+        try {
+            recMsgs = new receiverMessages("NoUser");
+        } catch (Exception e) {
+            String str = e.toString();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +46,18 @@ public class MainActivity extends AppCompatActivity {
         if(android.os.Build.VERSION.SDK_INT > 9){
             StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+        }
+
+        // If user wants to stop pop ups/phone notifications or start them again
+        messageActivity.stopPopUp_button= (Button) findViewById(R.id.stopPopUps);
+        messageActivity.startPopUp_button = (Button) findViewById((R.id.startPopUps));
+
+
+        // Initialize a receiver to only receive a user's notifications (polls for them)
+        try {
+            recMsgs = new receiverMessages("NoUser");
+        } catch (Exception e) {
+            String str = e.toString();
         }
 
         // Initialize a receiver to receive messages from database server

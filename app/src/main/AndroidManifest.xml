@@ -32,7 +32,6 @@
         <activity android:name=".viewStoveVideoListActivity"/>
         <activity android:name=".viewStoveVideoAnalysisActivity"/>
         <activity android:name=".addStoveActivity"/>
-        <activity android:name=".logoutActivity"/>
         <activity android:name=".currentContactsActivity"/>
         <activity android:name=".whoHasAddedUserAsContactActivity"/>
 
