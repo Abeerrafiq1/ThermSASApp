@@ -1,6 +1,6 @@
 # Author: Abeer Rafiq
 # Purpose of this class: This class facilitates communication between the app and the database
-# to constantly send a user's notifications/messages so the app can poll user messages
+# to constantly send a user's notifications/messages when the app polls for user messages.
 # If there is a stove risk for another member added to the user's notification, 
 # then the app can look for this every couple of seconds.
 # If this stove risk is found, app can show pop ups and phone notifications.
