@@ -33,11 +33,11 @@ public class registerActivity extends AppCompatActivity {
     private Button register_button;
     public static Handler exHandler;
 
-    // When a user goes back to this activity make sure receiverMessages (to retrieve user messages)
+    // When a user goes back to this activity make sure messageRetriever (to retrieve user messages)
     // is closed since user is logged out
     protected void onRestart() {
         super.onRestart();
-        receiverMessages.udpDatagramSocket.close();
+        messageRetriever.udpDatagramSocket.close();
         MainActivity.recMsgs.exitThread(true);
     }
 
@@ -48,7 +48,7 @@ public class registerActivity extends AppCompatActivity {
         setContentView(R.layout.register_activity);
 
         // To handle continuous retrieval of user messages (notifications) and associating pop ups
-        receiverMessages.udpDatagramSocket.close();
+        messageRetriever.udpDatagramSocket.close();
         MainActivity.recMsgs.exitThread(true);
 
         // Two editText instances to enter passwords and username

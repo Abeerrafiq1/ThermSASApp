@@ -88,7 +88,7 @@ public class messageActivity extends AppCompatActivity {
                     messageActivity.startPopUp_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(mContext, "Stopped Pop Ups/Notifications", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Started Pop Ups/Notifications", Toast.LENGTH_SHORT).show();
                             loginActivity.stopPopUps = "false";
                         }
                     });

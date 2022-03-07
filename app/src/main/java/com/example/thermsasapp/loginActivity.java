@@ -40,10 +40,10 @@ public class loginActivity extends AppCompatActivity {
     public static Handler exHandler2;
 
     // When a user goes back from the mainOptionsActivity, they go to this loginActivity
-    // Make sure receiverMessages (to retrieve user messages) is closed since user is logged out
+    // Make sure messageRetriever (to retrieve user messages) is closed since user is logged out
     protected void onRestart() {
         super.onRestart();
-        receiverMessages.udpDatagramSocket.close();
+        messageRetriever.udpDatagramSocket.close();
         stopPopUps = "false";
         MainActivity.recMsgs.exitThread(true);
     }
@@ -55,7 +55,7 @@ public class loginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
 
         // To handle continuous retrieval of user messages (notifications) and associating pop ups
-        receiverMessages.udpDatagramSocket.close();
+        messageRetriever.udpDatagramSocket.close();
         stopPopUps = "false";
         MainActivity.recMsgs.exitThread(true);
 
@@ -112,7 +112,7 @@ public class loginActivity extends AppCompatActivity {
                         Toast.makeText(mContext, "Authenticated", Toast.LENGTH_SHORT).show();
 
                         // To handle continuous retrieval of user messages (notifications)
-                        MainActivity.recMsgs = new receiverMessages(editTextUsername.getText().toString());
+                        MainActivity.recMsgs = new messageRetriever(editTextUsername.getText().toString());
                         MainActivity.recMsgs.start();
 
                         // Update user's messages

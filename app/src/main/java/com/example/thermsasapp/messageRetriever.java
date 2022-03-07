@@ -15,7 +15,7 @@ import java.net.SocketException;
  Once received, forward associating messages to LoginActivity exhandler to show pop ups and
  phone notifications.
  */
-class receiverMessages extends Thread{
+class messageRetriever extends Thread{
 
     // Class Variables
     private static final int receiverPort = 2100;
@@ -27,7 +27,7 @@ class receiverMessages extends Thread{
     public Boolean terminate;
 
     // Create new socket for receiving
-    public receiverMessages(String username) {
+    public messageRetriever(String username) {
         try {
             this.username = username;
             this.terminate = false;
@@ -82,7 +82,7 @@ class receiverMessages extends Thread{
                 messageRequest.put("username", username);
                 sender.run(databaseServerAddr, messageRequest.toString(), senderPort);
 
-                // Receive and store the received message
+                // Receive and store the received message or ack
                 udpDatagramSocket.receive(udpDatagramPacket);
                 message = new String(buffer, 0, udpDatagramPacket.getLength());
 
@@ -92,9 +92,9 @@ class receiverMessages extends Thread{
 
                 // If ack received, show corresponding message in debug
                 if (opcode.equals("0")) {
-                    Log.d("AppDebug", "RRRReceived Ack from DS: " + obj.toString());
+                    Log.d("AppDebug", "Received Ack from DS: " + obj.toString());
                 } else {
-                    Log.d("AppDebug", "RRRReceived Msg from DS: " + obj.toString());
+                    Log.d("AppDebug", "Received Msg from DS: " + obj.toString());
                 }
 
                 // Based on opcode received, direct app to proper activity
