@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         messageActivity.startPopUp_button = (Button) findViewById((R.id.startPopUps));
 
 
-        // Initialize a receiver to only receive a user's notifications (polls for them)
+        // Initialize a receiver to only receive a user's messages (polls for them)
         try {
             recMsgs = new messageRetriever("NoUser");
         } catch (Exception e) {

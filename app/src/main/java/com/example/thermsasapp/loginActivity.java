@@ -38,6 +38,7 @@ public class loginActivity extends AppCompatActivity {
     public static Handler exHandler;
     public static Handler exHandler1;
     public static Handler exHandler2;
+    public static String popUpUsername;
 
     // When a user goes back from the mainOptionsActivity, they go to this loginActivity
     // Make sure messageRetriever (to retrieve user messages) is closed since user is logged out
@@ -45,6 +46,7 @@ public class loginActivity extends AppCompatActivity {
         super.onRestart();
         messageRetriever.udpDatagramSocket.close();
         stopPopUps = "false";
+        popUpUsername = "";
         MainActivity.recMsgs.exitThread(true);
     }
 
@@ -57,6 +59,7 @@ public class loginActivity extends AppCompatActivity {
         // To handle continuous retrieval of user messages (notifications) and associating pop ups
         messageRetriever.udpDatagramSocket.close();
         stopPopUps = "false";
+        popUpUsername = "";
         MainActivity.recMsgs.exitThread(true);
 
         // Two editText instances to enter passwords and username
@@ -148,22 +151,22 @@ public class loginActivity extends AppCompatActivity {
                 super.handleMessage(dbpassword);
                 if (stopPopUps.equals("false")) {
                     // Show Pop Up
-                    String text = "A member has the stove on too long! Please check messages!";
+                    String text = "Username *" + popUpUsername + "* has the stove on too long! Please check messages!";
                     Intent intent = new Intent(loginActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);
                     startActivity(intent);
 
                     // Show Notification on phone's notification bar
-                    String text2 = "A member has the stove on too long! Swipe to close";
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager manager = getSystemService(NotificationManager.class);
                         manager.createNotificationChannel(channel);
                     }
-                    Log.d("AppDebug", "Again in Main");
+
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(loginActivity.this, "My Notification");
                     builder.setContentTitle("Stove Risk!");
-                    builder.setContentText(text2);
+                    builder.setContentText("Username *" + popUpUsername + "* has the stove on too long!");
+                    builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Username *" + popUpUsername + "* has the stove on too long!" + " Please see app messages and swipe to close"));
                     builder.setSmallIcon(R.drawable.save2);
                     builder.setAutoCancel(true);
                     NotificationManagerCompat managerCompat = NotificationManagerCompat.from(loginActivity.this);
@@ -180,13 +183,12 @@ public class loginActivity extends AppCompatActivity {
                 super.handleMessage(dbpassword);
                 if (stopPopUps.equals("false")) {
                     // Show Pop Up
-                    String text = "Your stove was on too long!\n Check stove and messages!";
+                    String text = "Your stove was on too long! Please check your stove and messages!";
                     Intent intent = new Intent(loginActivity.this, alertPopUpActivity.class);
                     intent.putExtra("popupText", text);
                     startActivity(intent);
 
                     // Show Notification on phone's notification bar
-                    String text2 = "Your stove was on too long!\nSwipe to close";
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager manager = getSystemService(NotificationManager.class);
@@ -194,7 +196,8 @@ public class loginActivity extends AppCompatActivity {
                     }
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(loginActivity.this, "My Notification");
                     builder.setContentTitle("Stove Risk!");
-                    builder.setContentText(text2);
+                    builder.setContentText("Your stove was on too long!");
+                    builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Your stove was on too long!" + " Please see app messages and swipe to close"));
                     builder.setSmallIcon(R.drawable.save2);
                     builder.setAutoCancel(true);
                     NotificationManagerCompat managerCompat = NotificationManagerCompat.from(loginActivity.this);

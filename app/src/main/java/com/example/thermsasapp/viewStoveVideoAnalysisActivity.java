@@ -44,9 +44,10 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
         // Get currently logged in username from previous view
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
+        String classification = intent.getStringExtra("classification");
 
         // Set headers of the table (7 columns)
-        String[] titles = {" Time Elapsed", "Classification", "  Pan Area", "  Pan Temp", "Number Food", "       Food Area", "       Food Temp"};
+        String[] titles = {" Time Elapsed", "  Pan Area", "  Pan Temp", "Number Food",  "Classification", "       Food Area", "       Food Temp"};
         tb_v = (TableView) findViewById(R.id.stoveData);
         tb_v.setHeaderBackgroundColor(Color.parseColor("#D2C5EA"));
         tb_v.setHeaderAdapter(new SimpleTableHeaderAdapter(mContext, titles));
@@ -92,13 +93,13 @@ public class viewStoveVideoAnalysisActivity extends AppCompatActivity{
                         for (int i = 0; i < record.length; i++) {
                             record[i] = record[i] + "}";
                             object[0] = new JSONObject((String) record[i]);
-                            item[0] = new String[]{object[0].getString("time_elapsed"), object[0].getString("classification"), object[0].getString("pan_area"),
-                                    object[0].getString("pan_temp"), object[0].getString("num_food"),
+                            item[0] = new String[]{object[0].getString("time_elapsed"), object[0].getString("pan_area"),
+                                    object[0].getString("pan_temp"), object[0].getString("num_food"),object[0].getString("classification"),
                                     "["+object[0].getString("food_area")+"]", "["+object[0].getString("food_temp")+"]"};
                             analysisTable.add(item[0]);
 
                             // If classification is determined to risky, set isOnTooLong to true to send corresponding messages (last if statement of this code)
-                            if (object[0].getString("classification").equals("on too long")){
+                            if (classification.equals("On Too Long")){
                                 isOnTooLong = true;
                             }
                         }

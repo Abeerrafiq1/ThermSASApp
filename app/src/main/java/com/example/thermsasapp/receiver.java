@@ -46,8 +46,8 @@ class receiver extends Thread {
             Log.d("AppDebug", "Error! " + e.toString());
         }
 
-        byte[] buffer = new byte[15048];
-        DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 15000);
+        byte[] buffer = new byte[30048];
+        DatagramPacket udpDatagramPacket = new DatagramPacket(buffer, 30000);
         String message;
         try {
             while (true) {

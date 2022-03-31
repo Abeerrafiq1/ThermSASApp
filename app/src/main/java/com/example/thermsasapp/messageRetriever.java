@@ -121,6 +121,10 @@ class messageRetriever extends Thread{
                                 messages.contains("has the stove on too long! Please make sure everything is okay")) {
                             // If message is about another user's stove
                             if (messages.contains("has the stove on too long! Please make sure everything is okay")) {
+                                // Get first username the stove risk is related to
+                                String[] username;
+                                username = messages.split("\\* ");
+                                loginActivity.popUpUsername = username[1].replace(" ", "");
                                 loginActivity.exHandler1.sendMessage(loginActivity.exHandler1.obtainMessage(1, message));
                                 Thread.sleep(5000);
                             }

@@ -48,17 +48,18 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
 
-        // Set headers of the table (2 columns)
-        String[] titles = {"   ID", "               TABLE NAME"};
+        // Set headers of the table (3 columns)
+        String[] titles = {"   ID", "               TABLE NAME", "  CLASSIFICATION"};
         tb_v = (TableView) findViewById(R.id.analysisTable);
         tb_v.setHeaderBackgroundColor(Color.parseColor("#D2C5EA"));
         tb_v.setHeaderAdapter(new SimpleTableHeaderAdapter(mContext, titles));
-        tb_v.setColumnCount(2);
+        tb_v.setColumnCount(3);
 
         // Set width of the table columns
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(mContext, 2);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(mContext, 3);
         columnModel.setColumnWidth(0, 70);
-        columnModel.setColumnWidth(1, 800);
+        columnModel.setColumnWidth(1, 300);
+        columnModel.setColumnWidth(2,  800);
         tb_v.setColumnModel(columnModel);
 
         // EditText to enter table id to view the table
@@ -101,7 +102,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                         for (int i = 0; i < record.length; i++) {
                             record[i] = record[i] + "}";
                             object[0] = new JSONObject((String) record[i]);
-                            item[0] = new String[]{object[0].getString("id") + " :", object[0].getString("analysis_table_name")};
+                            item[0] = new String[]{object[0].getString("id") + " :", object[0].getString("analysis_table_name"), object[0].getString("classification")};
                             stoveVideoList.add(item[0]);
                         }
                     }
@@ -133,6 +134,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                                 // Iterate though video list that was retrieved before "view data" button was pressed
                                 // to get the table name that corresponds with the table id entered
                                 String tableNmToLookup = "";
+                                String classification = "";
                                 try {
                                     for (int i = 0; i < finalRecord.length; i++) {
                                         finalRecord[i] = finalRecord[i] + "}";
@@ -141,6 +143,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
 
                                         if (tb_ID.equals(object[0].getString("id"))){
                                             tableNmToLookup = object[0].getString( "analysis_table_name");
+                                            classification = object[0].getString( "classification");
                                         }
                                     }
                                 } catch (JSONException e) {
@@ -166,6 +169,7 @@ public class viewStoveVideoListActivity extends AppCompatActivity {
                                     // Start the viewStoveVideoAnalysisActivity
                                     Intent intent = new Intent(viewStoveVideoListActivity.this, viewStoveVideoAnalysisActivity.class);
                                     intent.putExtra("username", username);
+                                    intent.putExtra("classification", classification);
                                     startActivity(intent);
                                 }
                                 // If table id entered is invalid (no such table exists), then show corresponding message

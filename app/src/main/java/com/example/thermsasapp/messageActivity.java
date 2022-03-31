@@ -137,7 +137,7 @@ public class messageActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent2 = new Intent(messageActivity.this, detailPopUpActivity.class);
-                            intent2.putExtra("height", "0.65");
+                            intent2.putExtra("height", "0.75");
                             intent2.putExtra("popupText", "\n\n\n\n\n\nTYPES OF NOTIFICATIONS: " +
                                     "\n\n * A stove has been unregistered " +
                                     "\n * A stove ID has been registered " +
@@ -145,8 +145,9 @@ public class messageActivity extends AppCompatActivity {
                                     "\n * Stove needs immediate attention due to risk " +
                                     "\n * Stove owner has added you as a contact " +
                                     "\n * Stove owner that has added you as a contact needs immediate attention due to risk of their stove" +
-                                    "\n\n CLEAR NOTIFICATIONS " +
-                                    "\n\n * Can be used to remove all previous messages" +
+                                    "\n\n MANAGING NOTIFICATIONS " +
+                                    "\n\n * Clear Messages Button used to remove all messages" +
+                                    "\n * Stop/Start Pop Ups/Notifications Buttons used to temporarily stop notifications or restart them" +
                                     "\n\n    * SWIPE POP UP RIGHT TO CLOSE IT *  ");
                             startActivity(intent2);
                         }
