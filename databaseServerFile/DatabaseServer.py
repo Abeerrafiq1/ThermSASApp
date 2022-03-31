@@ -685,6 +685,7 @@ class DatabaseServer:
         # Return appropriate msg to send to app
         return toSend
 
+
 # The main function that continuously receives json packets. 
 # Based on opcode received in the json packets, the main method
 # invokes other methods; if a message is to be sent back to app
