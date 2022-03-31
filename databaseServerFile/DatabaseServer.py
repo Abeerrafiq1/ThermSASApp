@@ -1,3 +1,4 @@
+
 # Author: Abeer Rafiq
 # Purpose of this class: This class facilitates communication between the app and the database
 # to either process user information data or stove analysis data.
@@ -293,7 +294,7 @@ class DatabaseServer:
         else:
             # Retrieve stove video table names from thermal_cooking database, table videos
             try:
-                mysql = """SELECT """ + """id, analysis_table_name FROM videos WHERE stoveId = """ + str(stoveID) 
+                mysql = """SELECT """ + """id, analysis_table_name, classification FROM videos WHERE stoveId = """ + str(stoveID) 
                 myresult = self.__cursorCooking.execute(mysql).fetchall()
                 # Extract stove video list
                 list = [dict(i) for i in myresult]
@@ -304,6 +305,7 @@ class DatabaseServer:
                     toSend = '{"opcode" : "10", "videoList" : "''"}'
                     print ('\nDatabase Error %s:' % e.args[0])
         # Return appropriate msg to send to app
+        print(toSend)
         return toSend 
 
     # When user wants to login, this method retrieves the user's password (to compare against the entered password)
@@ -767,3 +769,6 @@ def main():
     
 if __name__== "__main__":
     main()
+
+
+
