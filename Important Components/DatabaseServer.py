@@ -33,12 +33,12 @@ class DatabaseServer:
         # Set number of times to resend a packet
         self.__numRetries = 3
         # Set up connection to loginDB database
-        dbpath = 'C:/Users/amanp/Documents/SYSC 4907/loginDB.db'
+        dbpath = 'C:/Users/amanp/OneDrive/Documents/GitHub/ThermSASApp/Important Components/loginDB.db'
         self.__dbconnect = sqlite3.connect(dbpath); 
         self.__dbconnect.row_factory = sqlite3.Row
         self.__cursor = self.__dbconnect.cursor()    
         # Set up connection to thermal_cooking database
-        dbpath_cooking = 'C:/Users/amanp/Documents/SYSC 4907/thermal_cooking.db'
+        dbpath_cooking = 'C:/Users/amanp/OneDrive/Documents/GitHub/ThermSASApp/Important Components/thermal_cooking.db'
         self.__dbconnectCooking = sqlite3.connect(dbpath_cooking); 
         self.__dbconnectCooking.row_factory = sqlite3.Row
         self.__cursorCooking = self.__dbconnectCooking.cursor()        

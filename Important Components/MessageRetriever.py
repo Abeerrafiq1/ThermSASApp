@@ -33,7 +33,7 @@ class MessageRetriever:
         # Set number of times to resend a packet
         self.__numRetries = 5
         # Set up connection to loginDB database
-        dbpath = 'C:/Users/amanp/Documents/SYSC 4907/loginDB.db'
+        dbpath = 'C:/Users/amanp/OneDrive/Documents/GitHub/ThermSASApp/Important Components/loginDB.db'
         self.__dbconnect = sqlite3.connect(dbpath); 
         self.__dbconnect.row_factory = sqlite3.Row
         self.__cursor = self.__dbconnect.cursor()      
